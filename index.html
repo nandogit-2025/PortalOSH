@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Empresarial - Acceso a Aplicativos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .card-hover {
+            transition: all 0.2s ease-in-out;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .icon-hover {
+            transition: transform 0.2s ease-in-out;
+        }
+        .card-hover:hover .icon-hover {
+            transform: scale(1.1);
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .bg-gradient-custom {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .logo-container {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: white;
+            border: 1px solid #e5e7eb;
+        }
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-custom">
+    <!-- Header igual que antes -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <img src="./logos/448 (1).png" alt="">
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Portal OSH</h1>
+                        <p class="text-sm text-gray-600">Acceso a aplicativos corporativos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-900 mb-2">Aplicativos Disponibles</h2>
+            <p class="text-gray-600">Selecciona el aplicativo al que deseas acceder</p>
+        </div>
+
+        <!-- Grid de Aplicativos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="aplicativos-grid">
+            <!-- Los aplicativos se generarán dinámicamente con JavaScript -->
+        </div>
+
+        <!-- Footer Info igual que antes -->
+        <div class="mt-12 text-center">
+            <div class="bg-white rounded-lg p-6 shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">¿Necesitas ayuda?</h3>
+                <p class="text-gray-600 mb-4">
+                    Si tienes problemas para acceder a algún aplicativo, contacta al equipo de soporte técnico.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Configuración de aplicativos CON LOGOS
+        const aplicativos = [
+            {
+                nombre: "Siesa",
+                descripcion: "Gestión de empleados, nómina y beneficios",
+                url: "https://siesaerp04.siesacloud.com/",
+                logo: "logos/Siesa-1.jpg", // Ruta a tu logo
+                tipoLogo: "imagen" // Especifica que es una imagen
+            },
+            {
+                nombre: "Opera Cloud",
+                descripcion: "Contabilidad y finanzas empresariales",
+                url: "https://mtucu2.oraclehospitality.us-ashburn-1.ocs.oraclecloud.com/OPERA9/opera/operacloud/",
+                logo: "logos/opera_cloud_logo.ico", // Ruta al logo de Opera Cloud
+                tipoLogo: "imagen"
+            },
+            {
+                nombre: "Flexkeeping",
+                descripcion: "Almacenamiento y gestión de documentos",
+                url: "https://app.flexkeeping.com/app/auth/login",
+                logo: "logos/flex.ico",
+                tipoLogo: "imagen"
+            },
+            {
+                nombre: "Salto",
+                descripcion: "Sistema de correo electrónico empresarial",
+                url: "http://oshgetsvrcda:8100/index.html#!/zones",
+                logo: "logos/Salto_icono.ico", // Ejemplo: logo de Outlook
+                tipoLogo: "imagen"
+            },
+            {
+                nombre: "Power BI",
+                descripcion: "Análisis y visualización de datos",
+                url: "https://app.powerbi.com/view?r=eyJrIjoiNDhjZmI2NjItMWRhZC00YWM4LWIyMTItYjkyM2E2OTJmNmE0IiwidCI6ImQ1YWMyMzJkLWNhNmEtNGUzOC1hM2JkLTk0NTc5NTM4MGJiYSIsImMiOjR9",
+                logo: "logos/Powerbi.webp",
+                tipoLogo: "imagen"
+            },
+            {
+                nombre: "Cliquida",
+                descripcion: "Sistema de gestión empresarial",
+                url: "https://tempus.sttspartners.com:8080/cliquidaweb_osh/",
+                logo: "logos/Cliquida.png",
+                tipoLogo: "imagen"
+            },
+            {
+                nombre: "Buk",
+                descripcion: "Sistema de gestión empresarial",
+                url: "https://oshpitalitygroup.buk.co/users/sign_in",
+                logo: "logos/ODLS.png",
+                tipoLogo: "imagen"
+            },
+            {
+                nombre: "Outlook",
+                descripcion: "Sistema de gestión empresarial",
+                url: "https://outlook.office.com/",
+                logo: "logos/OIP.webp",
+                tipoLogo: "imagen"
+            },
+            {
+                nombre: "One drive",
+                descripcion: "Sistema de gestión empresarial",
+                url: "https://oshgetsemani-my.sharepoint.com/",
+                logo: "logos/Microsoft-OneDrive-Logo.jpg",
+                tipoLogo: "imagen"
+            },
+            {
+                nombre: "Power automate",
+                descripcion: "Sistema de gestión empresarial",
+                url: "https://make.powerautomate.com/",
+                logo: "logos/microsoft-power-automate.png",
+                tipoLogo: "imagen"
+            },
+            {
+                nombre: "Power apps",
+                descripcion: "Sistema de gestión empresarial",
+                url: "https://make.powerapps.com/",
+                logo: "logos/logo power apps.webp",
+                tipoLogo: "imagen"
+            },
+            {
+                nombre: "SharePoint",
+                descripcion: "Sistema de gestión documental",
+                url: "https://oshgetsemani.sharepoint.com/:u:/g/EZFpEUbVAdJEuUoxcWt-uQUBXZHh2416Cvyx0wAdCGyIXQ?e=p866PZ",
+                logo: "logos/SharePoint-Logo.wine.png",
+                tipoLogo: "imagen"
+            }
+        ];
+
+        // Función para generar las tarjetas de aplicativos
+        function generarAplicativos() {
+            const grid = document.getElementById('aplicativos-grid');
+            
+            aplicativos.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg shadow-sm border card-hover cursor-pointer';
+                
+                // Generar el contenido del logo según el tipo
+                let logoContent = '';
+                if (app.tipoLogo === 'imagen') {
+                    logoContent = `
+                        <div class="logo-container icon-hover">
+                            <img src="${app.logo}" alt="${app.nombre}" class="logo-img" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div style="display:none; width:100%; height:100%; background:#f3f4f6; align-items:center; justify-content:center; font-size:12px; color:#6b7280;">
+                                Logo
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    logoContent = `
+                        <div class="w-12 h-12 ${app.color || 'bg-gray-100'} rounded-lg flex items-center justify-center icon-hover">
+                            ${app.logo}
+                        </div>
+                    `;
+                }
+                
+                card.innerHTML = `
+                    <a href="${app.url}" target="_blank" rel="noopener noreferrer" class="block p-6">
+                        <div class="flex items-center space-x-3 mb-4">
+                            ${logoContent}
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-base font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2">
+                                    ${app.nombre}
+                                </h3>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-600 line-clamp-2 mb-4">${app.descripcion}</p>
+                        <button class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-transparent hover:bg-blue-50 hover:border-blue-200 transition-colors">
+                            Acceder
+                        </button>
+                    </a>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Inicializar la página cuando se carga
+        document.addEventListener('DOMContentLoaded', function() {
+            generarAplicativos();
+        });
+    </script>
+</body>
+</html>
