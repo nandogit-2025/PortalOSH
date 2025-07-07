@@ -45,16 +45,28 @@
             height: 32px;
             object-fit: contain;
         }
+        .section-divider {
+            border-top: 2px solid #e5e7eb;
+            margin: 3rem 0;
+            padding-top: 2rem;
+        }
+        .help-desk-card {
+            background: linear-gradient(135deg, white 0%, white 100%);
+            border: 2px solid white;
+        }
+        .help-desk-card:hover {
+            background: linear-gradient(135deg, white 0%, white 100%);
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-custom">
-    <!-- Header igual que antes -->
+    <!-- Header -->
     <header class="bg-white shadow-sm border-b">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                        <img src="./logos/448 (1).png" alt="">
+                        <img src="./logos/448 (1).png" alt="OSH Logo" class="w-8 h-8 object-contain">
                     </div>
                     <div>
                         <h1 class="text-2xl font-bold text-gray-900">Portal OSH</h1>
@@ -67,117 +79,198 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-2">Aplicativos Disponibles</h2>
-            <p class="text-gray-600">Selecciona el aplicativo al que deseas acceder</p>
+        
+        <!-- Sección de Mesas de Ayuda -->
+        <div class="mb-12">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-2 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                    Mesas de Ayuda
+                </h2>
+                <p class="text-gray-600">Solicita soporte técnico y servicios especializados</p>
+            </div>
+
+            <!-- Grid de Mesas de Ayuda -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="mesas-ayuda-grid">
+                <!-- Las mesas de ayuda se generarán dinámicamente con JavaScript -->
+            </div>
         </div>
 
-        <!-- Grid de Aplicativos -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="aplicativos-grid">
-            <!-- Los aplicativos se generarán dinámicamente con JavaScript -->
+        <!-- Separador -->
+        <div class="section-divider">
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold text-gray-900 mb-2 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    Aplicativos Disponibles
+                </h2>
+                <p class="text-gray-600">Selecciona el aplicativo al que deseas acceder</p>
+            </div>
+
+            <!-- Grid de Aplicativos -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="aplicativos-grid">
+                <!-- Los aplicativos se generarán dinámicamente con JavaScript -->
+            </div>
         </div>
 
-        <!-- Footer Info igual que antes -->
+        <!-- Footer Info -->
         <div class="mt-12 text-center">
             <div class="bg-white rounded-lg p-6 shadow-sm">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">¿Necesitas ayuda?</h3>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">¿Necesitas ayuda adicional?</h3>
                 <p class="text-gray-600 mb-4">
-                    Si tienes problemas para acceder a algún aplicativo, contacta al equipo de soporte técnico.
+                    Si tienes problemas para acceder a algún aplicativo o necesitas soporte técnico especializado, utiliza nuestras mesas de ayuda.
                 </p>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="mailto:soporte@osh.com" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        Contactar Soporte
+                    </a>
+                </div>
             </div>
         </div>
     </main>
 
     <script>
-        // Configuración de aplicativos CON LOGOS
+        // Configuración de Mesas de Ayuda
+        const mesasAyuda = [
+            {
+                nombre: "Mesa de Ayuda IT OSH 🧑‍💻🚀",
+                descripcion: "Soporte técnico general y sistemas",
+                url: "https://forms.office.com/pages/responsepage.aspx?id=LSOs1WrKOE6jvZRXlTgLuhOUaRhLywpFjBpwy5YIjZ1URE4xUjBQN0JONTUyMkJaWEdFSk5PUEJRRS4u&origin=lprLink&route=shorturl", // Reemplaza con tu URL real
+                icono: `<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>`,
+                tipoLogo: "svg",
+                estiloEspecial: "help-desk-card"
+            },
+            {
+                nombre: "Mesa de Ayuda Marketing",
+                descripcion: "Soporte para campañas y estrategias de marketing",
+                url: "https://forms.office.com/Pages/ResponsePage.aspx?id=LSOs1WrKOE6jvZRXlTgLuoHIs_az5aBOjudEoR0a8jFUQU1ITzI5ODdCQTNIMVRUVVZIWlBTTDM2Vi4u", // Reemplaza con tu URL real
+                icono: `<svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
+                </svg>`,
+                tipoLogo: "svg",
+                estiloEspecial: "help-desk-card"
+            },
+        ];
+
+        // Configuración de aplicativos (tu lista existente)
         const aplicativos = [
             {
                 nombre: "Siesa",
-                descripcion: "",
+                descripcion: "Sistema de gestión empresarial",
                 url: "https://siesaerp04.siesacloud.com/",
-                logo: "logos/Siesa-1.jpg", // Ruta a tu logo
-                tipoLogo: "imagen" // Especifica que es una imagen
+                logo: "logos/Siesa-1.jpg",
+                tipoLogo: "imagen"
             },
             {
                 nombre: "Opera Cloud",
-                descripcion: "",
+                descripcion: "Sistema de gestión hotelera",
                 url: "https://mtucu2.oraclehospitality.us-ashburn-1.ocs.oraclecloud.com/OPERA9/opera/operacloud/",
-                logo: "logos/opera_cloud_logo.ico", // Ruta al logo de Opera Cloud
+                logo: "logos/opera_cloud_logo.ico",
                 tipoLogo: "imagen"
             },
             {
                 nombre: "Flexkeeping",
-                descripcion: "",
+                descripcion: "Gestión de housekeeping",
                 url: "https://app.flexkeeping.com/app/auth/login",
                 logo: "logos/flex.ico",
                 tipoLogo: "imagen"
             },
             {
                 nombre: "Salto",
-                descripcion: "",
+                descripcion: "Control de accesos",
                 url: "http://oshgetsvrcda:8100/index.html#!/zones",
-                logo: "logos/Salto_icono.ico", // Ejemplo: logo de Outlook
+                logo: "logos/Salto_icono.ico",
                 tipoLogo: "imagen"
             },
             {
                 nombre: "Power BI",
-                descripcion: "",
+                descripcion: "Business Intelligence y reportes",
                 url: "https://app.powerbi.com/view?r=eyJrIjoiNDhjZmI2NjItMWRhZC00YWM4LWIyMTItYjkyM2E2OTJmNmE0IiwidCI6ImQ1YWMyMzJkLWNhNmEtNGUzOC1hM2JkLTk0NTc5NTM4MGJiYSIsImMiOjR9",
                 logo: "logos/Powerbi.webp",
                 tipoLogo: "imagen"
             },
             {
-                nombre: "Cliquida",
-                descripcion: "",
-                url: "https://tempus.sttspartners.com:8080/cliquidaweb_osh/",
-                logo: "logos/Cliquida.png",
-                tipoLogo: "imagen"
-            },
-            {
                 nombre: "Buk",
-                descripcion: "",
+                descripcion: "Gestión de recursos humanos",
                 url: "https://oshpitalitygroup.buk.co/users/sign_in",
                 logo: "logos/ODLS.png",
                 tipoLogo: "imagen"
             },
             {
                 nombre: "Outlook",
-                descripcion: "",
+                descripcion: "Correo corporativo",
                 url: "https://outlook.office.com/",
                 logo: "logos/OIP.webp",
                 tipoLogo: "imagen"
             },
             {
-                nombre: "One drive",
-                descripcion: "",
+                nombre: "OneDrive",
+                descripcion: "Almacenamiento en la nube",
                 url: "https://oshgetsemani-my.sharepoint.com/",
                 logo: "logos/Microsoft-OneDrive-Logo.jpg",
                 tipoLogo: "imagen"
             },
             {
-                nombre: "Power automate",
-                descripcion: "",
+                nombre: "Power Automate",
+                descripcion: "Automatización de procesos",
                 url: "https://make.powerautomate.com/",
                 logo: "logos/microsoft-power-automate.png",
                 tipoLogo: "imagen"
             },
             {
-                nombre: "Power apps",
-                descripcion: "",
+                nombre: "Power Apps",
+                descripcion: "Aplicaciones empresariales",
                 url: "https://make.powerapps.com/",
                 logo: "logos/logo power apps.webp",
                 tipoLogo: "imagen"
             },
             {
                 nombre: "SharePoint",
-                descripcion: "",
+                descripcion: "Colaboración y documentos",
                 url: "https://oshgetsemani.sharepoint.com/:u:/g/EZFpEUbVAdJEuUoxcWt-uQUBXZHh2416Cvyx0wAdCGyIXQ?e=p866PZ",
                 logo: "logos/SharePoint-Logo.wine.png",
                 tipoLogo: "imagen"
             }
         ];
 
-        // Función para generar las tarjetas de aplicativos
+        // Función para generar las tarjetas de mesas de ayuda
+        function generarMesasAyuda() {
+            const grid = document.getElementById('mesas-ayuda-grid');
+            
+            mesasAyuda.forEach(mesa => {
+                const card = document.createElement('div');
+                card.className = `rounded-lg shadow-sm border card-hover cursor-pointer ${mesa.estiloEspecial || 'bg-white'}`;
+                
+                card.innerHTML = `
+                    <a href="${mesa.url}" target="_blank" rel="noopener noreferrer" class="block p-6">
+                        <div class="flex flex-col items-center text-center">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center icon-hover mb-4 shadow-md">
+                                ${mesa.icono}
+                            </div>
+                            <h3 class="text-base font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2 mb-2">
+                                ${mesa.nombre}
+                            </h3>
+                            <p class="text-sm text-gray-600 line-clamp-2 mb-4">${mesa.descripcion}</p>
+                            <button class="w-full px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-colors">
+                                Solicitar Ayuda
+                            </button>
+                        </div>
+                    </a>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Función para generar las tarjetas de aplicativos (tu función existente mejorada)
         function generarAplicativos() {
             const grid = document.getElementById('aplicativos-grid');
             
@@ -185,7 +278,6 @@
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-lg shadow-sm border card-hover cursor-pointer';
                 
-                // Generar el contenido del logo según el tipo
                 let logoContent = '';
                 if (app.tipoLogo === 'imagen') {
                     logoContent = `
@@ -228,6 +320,7 @@
 
         // Inicializar la página cuando se carga
         document.addEventListener('DOMContentLoaded', function() {
+            generarMesasAyuda();
             generarAplicativos();
         });
     </script>
