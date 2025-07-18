@@ -29,6 +29,24 @@
         .bg-gradient-custom {
             background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         }
+        /* Logos más pequeños para aplicativos */
+        .logo-container-small {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: white;
+            border: 1px solid #e5e7eb;
+        }
+        .logo-img-small {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+        /* Logos normales para mesas de ayuda */
         .logo-container {
             width: 48px;
             height: 48px;
@@ -57,6 +75,183 @@
         .help-desk-card:hover {
             background: linear-gradient(135deg, white 0%, white 100%);
         }
+        
+        /* Grid de 5 columnas fijo */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+        }
+        
+        /* Responsive para móviles */
+        @media (max-width: 640px) {
+            .apps-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.75rem;
+            }
+        }
+        
+        @media (min-width: 641px) and (max-width: 768px) {
+            .apps-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.875rem;
+            }
+        }
+        
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .apps-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1rem;
+            }
+        }
+        
+        /* Estilos para el menú de pestañas */
+        .tab-menu {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .tab-container {
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 0 8px;
+        }
+        
+        .tab-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab-item {
+            flex: 0 0 auto;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+            font-size: 14px;
+            color: #6b7280;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: fit-content;
+            position: relative;
+            margin: 0 2px;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .tab-item:hover {
+            background-color: #f9fafb;
+            color: #374151;
+        }
+        
+        .tab-item.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+            background-color: #eff6ff;
+        }
+        
+        .tab-icon {
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .tab-text {
+            flex-shrink: 0;
+            min-width: max-content;
+        }
+        
+        /* Badge para mostrar cantidad de aplicativos */
+        .tab-count {
+            background-color: #e5e7eb;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 7px;
+            border-radius: 10px;
+            margin-left: 4px;
+            min-width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .tab-item.active .tab-count {
+            background-color: #dbeafe;
+            color: #2563eb;
+        }
+        
+        /* Indicador de múltiples categorías */
+        .multi-category-indicator {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            border-radius: 50%;
+            opacity: 0.7;
+        }
+        
+        /* Indicador especial para aplicativos globales */
+        .global-app-indicator {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+        
+        /* Responsive para móviles */
+        @media (max-width: 768px) {
+            .tab-item {
+                padding: 12px 14px;
+                font-size: 13px;
+                gap: 6px;
+            }
+            .tab-icon {
+                font-size: 14px;
+            }
+            .tab-count {
+                font-size: 10px;
+                padding: 2px 5px;
+                min-width: 18px;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .tab-item {
+                padding: 10px 12px;
+                font-size: 12px;
+                gap: 4px;
+            }
+            .tab-icon {
+                font-size: 13px;
+            }
+            .tab-count {
+                font-size: 9px;
+                padding: 2px 4px;
+                min-width: 16px;
+            }
+        }
+        
+        /* Animación para el cambio de contenido */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-custom">
@@ -80,25 +275,7 @@
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        <!-- Separador -->
-        <div class="section-divider">
-            <div class="mb-8">
-                <h2 class="text-xl font-semibold text-gray-900 mb-2 flex items-center">
-                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                    </svg>
-                    Aplicativos Disponibles
-                </h2>
-                <p class="text-gray-600">Selecciona el aplicativo al que deseas acceder</p>
-            </div>
-
-            <!-- Grid de Aplicativos -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="aplicativos-grid">
-                <!-- Los aplicativos se generarán dinámicamente con JavaScript -->
-            </div>
-        </div>
-
-                <!-- Sección de Mesas de Ayuda -->
+        <!-- Sección de Mesas de Ayuda - MOVIDA ARRIBA -->
         <div class="mb-12">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold text-gray-900 mb-2 flex items-center">
@@ -111,11 +288,79 @@
             </div>
 
             <!-- Grid de Mesas de Ayuda -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="mesas-ayuda-grid">
+            <div class="apps-grid fade-in" id="mesas-ayuda-grid">
                 <!-- Las mesas de ayuda se generarán dinámicamente con JavaScript -->
             </div>
         </div>
 
+        <!-- Separador -->
+        <div class="section-divider">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-2 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                    </svg>
+                    Aplicativos Disponibles
+                </h2>
+                <p class="text-gray-600">Selecciona el aplicativo al que deseas acceder</p>
+            </div>
+
+            <!-- Menú de Pestañas ORDENADO ALFABÉTICAMENTE -->
+            <div class="tab-menu">
+                <div class="tab-container" id="tab-container">
+                    <div class="tab-item active" onclick="filterByArea('todos')" data-category="todos">
+                        <span class="tab-icon">📋</span>
+                        <span class="tab-text">Todos</span>
+                        <span class="tab-count" id="count-todos">0</span>
+                    </div>
+                    <div class="tab-item" onclick="filterByArea('alimentos')" data-category="alimentos">
+                        <span class="tab-icon">🍽️</span>
+                        <span class="tab-text">A & B</span>
+                        <span class="tab-count" id="count-alimentos">0</span>
+                    </div>
+                    <div class="tab-item" onclick="filterByArea('compras')" data-category="compras">
+                        <span class="tab-icon">🛒</span>
+                        <span class="tab-text">Almacén & Compras</span>
+                        <span class="tab-count" id="count-compras">0</span>
+                    </div>
+                    <div class="tab-item" onclick="filterByArea('comercial')" data-category="comercial">
+                        <span class="tab-icon">💼</span>
+                        <span class="tab-text">Comercial</span>
+                        <span class="tab-count" id="count-comercial">0</span>
+                    </div>
+                    <div class="tab-item" onclick="filterByArea('contraloria')" data-category="contraloria">
+                        <span class="tab-icon">📊</span>
+                        <span class="tab-text">Contraloría</span>
+                        <span class="tab-count" id="count-contraloria">0</span>
+                    </div>
+                    <div class="tab-item" onclick="filterByArea('marketing')" data-category="marketing">
+                        <span class="tab-icon">📢</span>
+                        <span class="tab-text">Marketing</span>
+                        <span class="tab-count" id="count-marketing">0</span>
+                    </div>
+                    <div class="tab-item" onclick="filterByArea('operaciones')" data-category="operaciones">
+                        <span class="tab-icon">⚙️</span>
+                        <span class="tab-text">Operaciones</span>
+                        <span class="tab-count" id="count-operaciones">0</span>
+                    </div>
+                    <div class="tab-item" onclick="filterByArea('recursos-humanos')" data-category="recursos-humanos">
+                        <span class="tab-icon">👥</span>
+                        <span class="tab-text">Recursos Humanos</span>
+                        <span class="tab-count" id="count-recursos-humanos">0</span>
+                    </div>
+                    <div class="tab-item" onclick="filterByArea('tecnologia')" data-category="tecnologia">
+                        <span class="tab-icon">💻</span>
+                        <span class="tab-text">Tecnología</span>
+                        <span class="tab-count" id="count-tecnologia">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid de Aplicativos - 5 COLUMNAS FIJAS -->
+            <div class="apps-grid fade-in" id="aplicativos-grid">
+                <!-- Los aplicativos se generarán dinámicamente con JavaScript -->
+            </div>
+        </div>
 
         <!-- Footer Info -->
         <div class="mt-12 text-center">
@@ -134,154 +379,323 @@
             {
                 nombre: "Mesa de Ayuda IT OSH 🧑‍💻🚀",
                 descripcion: "Soporte técnico general y sistemas",
-                url: "https://forms.office.com/pages/responsepage.aspx?id=LSOs1WrKOE6jvZRXlTgLuhOUaRhLywpFjBpwy5YIjZ1URE4xUjBQN0JONTUyMkJaWEdFSk5PUEJRRS4u&origin=lprLink&route=shorturl", // Reemplaza con tu URL real
+                url: "https://forms.office.com/pages/responsepage.aspx?id=LSOs1WrKOE6jvZRXlTgLuhOUaRhLywpFjBpwy5YIjZ1URE4xUjBQN0JONTUyMkJaWEdFSk5PUEJRRS4u&origin=lprLink&route=shorturl",
                 icono: `<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>`,
                 tipoLogo: "svg",
-                estiloEspecial: "help-desk-card"
+                estiloEspecial: "help-desk-card",
+                categorias: ["tecnologia"]
             },
             {
                 nombre: "Requerimiento Marketing",
                 descripcion: "Soporte para campañas y estrategias de marketing",
-                url: "https://forms.office.com/Pages/ResponsePage.aspx?id=LSOs1WrKOE6jvZRXlTgLuoHIs_az5aBOjudEoR0a8jFUQU1ITzI5ODdCQTNIMVRUVVZIWlBTTDM2Vi4u", // Reemplaza con tu URL real
+                url: "https://forms.office.com/Pages/ResponsePage.aspx?id=LSOs1WrKOE6jvZRXlTgLuoHIs_az5aBOjudEoR0a8jFUQU1ITzI5ODdCQTNIMVRUVVZIWlBTTDM2Vi4u",
                 icono: `<svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
                 </svg>`,
                 tipoLogo: "svg",
-                estiloEspecial: "help-desk-card"
+                estiloEspecial: "help-desk-card",
+                categorias: ["marketing"]
+            },
+            {
+                nombre: "Mesa de Solicitudes de Compra",
+                descripcion: "Solicitudes de compras y suministros",
+                url: "https://formularioalmacen.onrender.com", // Reemplaza con tu URL real
+                icono: `<svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                </svg>`,
+                tipoLogo: "svg",
+                estiloEspecial: "help-desk-card",
+                categorias: ["compras"]
             },
         ];
 
-        // Configuración de aplicativos (tu lista existente)
+        // Configuración de aplicativos SIN DIRECCIÓN GENERAL
         const aplicativos = [
+            // APLICATIVOS GLOBALES (aparecen en todas las áreas - SIN DIRECCIÓN GENERAL)
             {
-                nombre: "LINKEDIN",
-                descripcion: "Red profesional para conectar talentos",
-                url: "https://www.linkedin.com/company/oshhotels/",
-                logo: "logos/linkedin.PNG",
-                tipoLogo: "imagen"
-            },
-            {
-                nombre: "MYSATCOM",
-                descripcion: "Facturador electronico POS",
-                url: "https://colombia.mysatcomla.com/Ingreso/OSHG",
-                logo: "logos/logoSatcom.PNG",
-                tipoLogo: "imagen"
-            },
-            {
-                nombre: "DIGIDOC",
-                descripcion: "Sistema de gestión Facturas",
-                url: "https://digidoc.net.co/oshhotels/Inicio/Inicio#no-back-button",
-                logo: "logos/digidoc.PNG",
-                tipoLogo: "imagen"
-            },
-            {
-                nombre: "Siesa",
-                descripcion: "Sistema de gestión empresarial",
-                url: "https://siesaerp04.siesacloud.com/",
-                logo: "logos/Siesa-1.jpg",
-                tipoLogo: "imagen"
-            },
-            {
-                nombre: "Opera Cloud",
-                descripcion: "Sistema de gestión hotelera",
-                url: "https://mtucu2.oraclehospitality.us-ashburn-1.ocs.oraclecloud.com/OPERA9/opera/operacloud/",
-                logo: "logos/opera_cloud_logo.ico",
-                tipoLogo: "imagen"
-            },
-            {
-                nombre: "Flexkeeping",
-                descripcion: "Gestión de housekeeping",
-                url: "https://app.flexkeeping.com/app/auth/login",
-                logo: "logos/flex.ico",
-                tipoLogo: "imagen"
-            },
-            {
-                nombre: "Plantillas Corporativas",
-                descripcion: "Sharepoint de Plantillas Corporativas",
-                url: "https://oshgetsemani.sharepoint.com/sites/MERCADEOYCOMUNICACIONESOSH/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMERCADEOYCOMUNICACIONESOSH%2FShared%20Documents%2FGeneral%2F0%2E1%20Comunicaciones%20y%20Mercadeo%2FBonos%20Marketing%2FPlantillas%20OSH&p=true&ct=1752000080521&or=OWA%2DNT%2DMail&cid=92c4bdca%2D335d%2D92c3%2Db97d%2De3d14a91c393&ga=1",
-                logo: "logos/SharePoint-Logo.wine.png",
-                tipoLogo: "imagen"
-            },
-            {
-                nombre: "Salto",
-                descripcion: "Control de accesos",
-                url: "http://oshgetsvrcda:8100/index.html#!/zones",
-                logo: "logos/Salto_icono.ico",
-                tipoLogo: "imagen"
+                nombre: "Outlook",
+                descripcion: "Correo corporativo",
+                url: "https://outlook.office.com/",
+                logo: "logos/OIP.webp",
+                tipoLogo: "imagen",
+                categorias: ["contraloria", "alimentos", "operaciones", "tecnologia", "comercial", "recursos-humanos", "marketing", "compras"], // SIN DIRECCIÓN
+                esGlobal: true
             },
             {
                 nombre: "Power BI",
                 descripcion: "Business Intelligence y reportes",
                 url: "https://app.powerbi.com/view?r=eyJrIjoiNDhjZmI2NjItMWRhZC00YWM4LWIyMTItYjkyM2E2OTJmNmE0IiwidCI6ImQ1YWMyMzJkLWNhNmEtNGUzOC1hM2JkLTk0NTc5NTM4MGJiYSIsImMiOjR9",
                 logo: "logos/Powerbi.webp",
-                tipoLogo: "imagen"
+                tipoLogo: "imagen",
+                categorias: ["contraloria", "alimentos", "operaciones", "tecnologia", "comercial", "recursos-humanos", "marketing", "compras"], // SIN DIRECCIÓN
+                esGlobal: true
             },
             {
-                nombre: "C-liquida",
-                descripcion: "Gestion de horarios y turnos",
-                url: "https://tempus.sttspartners.com:8080/cliquidaweb_osh/",
-                logo: "logos/Cliquida.jpg",
-                tipoLogo: "imagen"
-            },
-            {
-                nombre: "Buk",
-                descripcion: "Gestión de recursos humanos",
-                url: "https://oshpitalitygroup.buk.co/users/sign_in",
-                logo: "logos/ODLS.png",
-                tipoLogo: "imagen"
-            },
-            {
-                nombre: "Outlook",
-                descripcion: "Correo corporativo",
-                url: "https://outlook.office.com/",
-                logo: "logos/OIP.webp",
-                tipoLogo: "imagen"
-            },
-            {
-                nombre: "OneDrive",
-                descripcion: "Almacenamiento en la nube",
-                url: "https://oshgetsemani-my.sharepoint.com/",
-                logo: "logos/Microsoft-OneDrive-Logo.jpg",
-                tipoLogo: "imagen"
+                nombre: "Siesa",
+                descripcion: "Sistema de gestión empresarial",
+                url: "https://siesaerp04.siesacloud.com/",
+                logo: "logos/Siesa-1.jpg",
+                tipoLogo: "imagen",
+                categorias: ["contraloria", "alimentos", "operaciones", "tecnologia", "comercial", "recursos-humanos", "marketing", "compras"], // SIN DIRECCIÓN
+                esGlobal: true
             },
             {
                 nombre: "Power Automate",
                 descripcion: "Automatización de procesos",
                 url: "https://make.powerautomate.com/",
                 logo: "logos/microsoft-power-automate.png",
-                tipoLogo: "imagen"
+                tipoLogo: "imagen",
+                categorias: ["contraloria", "alimentos", "operaciones", "tecnologia", "comercial", "recursos-humanos", "marketing", "compras"], // SIN DIRECCIÓN
+                esGlobal: true
             },
             {
                 nombre: "SharePoint",
                 descripcion: "Colaboración y documentos",
                 url: "https://oshgetsemani.sharepoint.com/:u:/g/EZFpEUbVAdJEuUoxcWt-uQUBXZHh2416Cvyx0wAdCGyIXQ?e=p866PZ",
                 logo: "logos/SharePoint-Logo.wine.png",
-                tipoLogo: "imagen"
+                tipoLogo: "imagen",
+                categorias: ["contraloria", "alimentos", "operaciones", "tecnologia", "comercial", "recursos-humanos", "marketing", "compras"], // SIN DIRECCIÓN
+                esGlobal: true
+            },
+            {
+                nombre: "Buk",
+                descripcion: "Gestión de recursos humanos",
+                url: "https://oshpitalitygroup.buk.co/users/sign_in",
+                logo: "logos/ODLS.png",
+                tipoLogo: "imagen",
+                categorias: ["contraloria", "alimentos", "operaciones", "tecnologia", "comercial", "recursos-humanos", "marketing", "compras"], // SIN DIRECCIÓN
+                esGlobal: true
+            },
+            {
+                nombre: "DIGIDOC",
+                descripcion: "Sistema de gestión Facturas",
+                url: "https://digidoc.net.co/oshhotels/Inicio/Inicio#no-back-button",
+                logo: "logos/digidoc.PNG",
+                tipoLogo: "imagen",
+                categorias: ["contraloria", "alimentos", "operaciones", "tecnologia", "comercial", "recursos-humanos", "marketing", "compras"], // SIN DIRECCIÓN
+                esGlobal: true
+            },
+
+            // APLICATIVOS ESPECÍFICOS POR ÁREA
+            // Contraloría
+            {
+                nombre: "MYSATCOM",
+                descripcion: "Facturador electronico POS",
+                url: "https://colombia.mysatcomla.com/Ingreso/OSHG",
+                logo: "logos/logoSatcom.PNG",
+                tipoLogo: "imagen",
+                categorias: ["contraloria", "alimentos", "tecnologia"]
+            },
+            {
+                nombre: "Opera Cloud",
+                descripcion: "Sistema de gestión hotelera",
+                url: "https://mtucu2.oraclehospitality.us-ashburn-1.ocs.oraclecloud.com/OPERA9/opera/operacloud/",
+                logo: "logos/opera_cloud_logo.ico",
+                tipoLogo: "imagen",
+                categorias: ["contraloria", "operaciones", "comercial", "tecnologia"]
+            },
+
+            // Alimentos & Bebidas + Operaciones + Recursos Humanos
+            {
+                nombre: "C-liquida",
+                descripcion: "Gestion de horarios y turnos",
+                url: "https://tempus.sttspartners.com:8080/cliquidaweb_osh/",
+                logo: "logos/Cliquida.jpg",
+                tipoLogo: "imagen",
+                categorias: ["alimentos", "operaciones", "recursos-humanos"]
+            },
+
+            // Operaciones
+            {
+                nombre: "Flexkeeping",
+                descripcion: "Gestión de housekeeping",
+                url: "https://app.flexkeeping.com/app/auth/login",
+                logo: "logos/flex.ico",
+                tipoLogo: "imagen",
+                categorias: ["operaciones", "tecnologia"]
+            },
+            {
+                nombre: "Salto",
+                descripcion: "Control de accesos",
+                url: "http://oshgetsvrcda:8100/index.html#!/zones",
+                logo: "logos/Salto_icono.ico",
+                tipoLogo: "imagen",
+                categorias: ["operaciones", "tecnologia"]
+            },
+
+            // Tecnología
+            {
+                nombre: "Plantillas Corporativas",
+                descripcion: "Sharepoint de Plantillas Corporativas",
+                url: "https://oshgetsemani.sharepoint.com/sites/MERCADEOYCOMUNICACIONESOSH/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMERCADEOYCOMUNICACIONESOSH%2FShared%20Documents%2FGeneral%2F0%2E1%20Comunicaciones%20y%20Mercadeo%2FBonos%20Marketing%2FPlantillas%20OSH&p=true&ct=1752000080521&or=OWA%2DNT%2DMail&cid=92c4bdca%2D335d%2D92c3%2Db97d%2De3d14a91c393&ga=1",
+                logo: "logos/SharePoint-Logo.wine.png",
+                tipoLogo: "imagen",
+                categorias: ["tecnologia", "marketing"]
+            },
+
+            // Recursos Humanos
+            {
+                nombre: "LINKEDIN",
+                descripcion: "Red profesional para conectar talentos",
+                url: "https://www.linkedin.com/company/oshhotels/",
+                logo: "logos/linkedin.PNG",
+                tipoLogo: "imagen",
+                categorias: ["recursos-humanos"]
+            },
+
+            // OneDrive (solo tecnología)
+            {
+                nombre: "OneDrive",
+                descripcion: "Almacenamiento en la nube",
+                url: "https://oshgetsemani-my.sharepoint.com/",
+                logo: "logos/Microsoft-OneDrive-Logo.jpg",
+                tipoLogo: "imagen",
+                categorias: ["tecnologia"]
             }
         ];
 
-        // Función para generar las tarjetas de mesas de ayuda
-        function generarMesasAyuda() {
-            const grid = document.getElementById('mesas-ayuda-grid');
-            
+        let currentFilter = 'todos';
+
+        // Función para contar aplicativos por categoría
+        function actualizarContadores() {
+            const contadores = {
+                todos: aplicativos.length,
+                contraloria: 0,
+                alimentos: 0,
+                operaciones: 0,
+                tecnologia: 0,
+                comercial: 0,
+                'recursos-humanos': 0,
+                marketing: 0,
+                compras: 0
+            };
+
+            // Contar aplicativos
+            aplicativos.forEach(app => {
+                app.categorias.forEach(categoria => {
+                    if (contadores.hasOwnProperty(categoria)) {
+                        contadores[categoria]++;
+                    }
+                });
+            });
+
+            // Contar mesas de ayuda
             mesasAyuda.forEach(mesa => {
-                const card = document.createElement('div');
-                card.className = `rounded-lg shadow-sm border card-hover cursor-pointer ${mesa.estiloEspecial || 'bg-white'}`;
-                
-                card.innerHTML = `
-                    <a href="${mesa.url}" target="_blank" rel="noopener noreferrer" class="block p-6">
-                        <div class="flex flex-col items-center text-center">
-                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center icon-hover mb-4 shadow-md">
+                if (mesa.categorias) {
+                    mesa.categorias.forEach(categoria => {
+                        if (contadores.hasOwnProperty(categoria)) {
+                            contadores[categoria]++;
+                        }
+                    });
+                }
+            });
+
+            // Actualizar los badges en el UI
+            Object.keys(contadores).forEach(categoria => {
+                const elemento = document.getElementById(`count-${categoria}`);
+                if (elemento) {
+                    elemento.textContent = contadores[categoria];
+                }
+            });
+        }
+
+        // Función para generar las tarjetas de mesas de ayuda
+        function generarMesasAyuda(filtro = 'todos') {
+    const grid = document.getElementById('mesas-ayuda-grid');
+    
+    const mesasFiltradas = filtro === 'todos' 
+        ? mesasAyuda 
+        : mesasAyuda.filter(mesa => !mesa.categorias || mesa.categorias.includes(filtro));
+    
+    // Limpiar solo si hay cambio de filtro
+    if (grid.children.length === 0 || filtro !== 'todos') {
+        grid.innerHTML = '';
+        
+        mesasFiltradas.forEach(mesa => {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow-sm border card-hover cursor-pointer relative';
+            
+            // Indicador especial para mesas de ayuda
+            const helpIndicator = '<div style="position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: linear-gradient(45deg, #f59e0b, #ef4444); border-radius: 50%; opacity: 0.8;" title="Mesa de Ayuda"></div>';
+            
+            card.innerHTML = `
+                ${helpIndicator}
+                <a href="${mesa.url}" target="_blank" rel="noopener noreferrer" class="block p-3">
+                    <div class="flex flex-col items-center text-center">
+                        <div class="logo-container-small icon-hover">
+                            <div class="w-6 h-6 flex items-center justify-center">
                                 ${mesa.icono}
                             </div>
-                            <h3 class="text-base font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2 mb-2">
-                                ${mesa.nombre}
+                        </div>
+                        <h3 class="text-xs font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2 mt-2 mb-1">
+                            ${mesa.nombre}
+                        </h3>
+                        <p class="text-xs text-gray-600 line-clamp-2 mb-2">${mesa.descripcion}</p>
+                        <button class="w-full px-2 py-1 border border-gray-300 rounded text-xs font-medium text-gray-700 bg-transparent hover:bg-orange-50 hover:border-orange-200 transition-colors">
+                            Solicitar Ayuda
+                        </button>
+                    </div>
+                </a>
+            `;
+            
+            grid.appendChild(card);
+        });
+    }
+}
+
+        // Función para generar las tarjetas de aplicativos - GRID DE 5 COLUMNAS
+        function generarAplicativos(filtro = 'todos') {
+            const grid = document.getElementById('aplicativos-grid');
+            grid.innerHTML = ''; // Limpiar grid
+            
+            const aplicativosFiltrados = filtro === 'todos' 
+                ? aplicativos 
+                : aplicativos.filter(app => app.categorias.includes(filtro));
+            
+            aplicativosFiltrados.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg shadow-sm border card-hover cursor-pointer relative';
+                
+                // Indicador para aplicativos globales o múltiples categorías
+                let indicator = '';
+                if (app.esGlobal) {
+                    indicator = '<div class="global-app-indicator" title="Disponible para todas las áreas"></div>';
+                } else if (app.categorias.length > 1) {
+                    indicator = '<div class="multi-category-indicator" title="Disponible en múltiples áreas"></div>';
+                }
+                
+                let logoContent = '';
+                if (app.tipoLogo === 'imagen') {
+                    logoContent = `
+                        <div class="logo-container-small icon-hover">
+                            <img src="${app.logo}" alt="${app.nombre}" class="logo-img-small" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div style="display:none; width:100%; height:100%; background:#f3f4f6; align-items:center; justify-content:center; font-size:10px; color:#6b7280;">
+                                Logo
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    logoContent = `
+                        <div class="w-9 h-9 ${app.color || 'bg-gray-100'} rounded-lg flex items-center justify-center icon-hover">
+                            ${app.logo}
+                        </div>
+                    `;
+                }
+                
+                card.innerHTML = `
+                    ${indicator}
+                    <a href="${app.url}" target="_blank" rel="noopener noreferrer" class="block p-3">
+                        <div class="flex flex-col items-center text-center">
+                            ${logoContent}
+                            <h3 class="text-xs font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2 mt-2 mb-1">
+                                ${app.nombre}
                             </h3>
-                            <p class="text-sm text-gray-600 line-clamp-2 mb-4">${mesa.descripcion}</p>
-                            <button class="w-full px-4 py-2 bg-white border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-colors">
-                                Solicitar Ayuda
+                            <p class="text-xs text-gray-600 line-clamp-2 mb-2">${app.descripcion}</p>
+                            <button class="w-full px-2 py-1 border border-gray-300 rounded text-xs font-medium text-gray-700 bg-transparent hover:bg-blue-50 hover:border-blue-200 transition-colors">
+                                Acceder
                             </button>
                         </div>
                     </a>
@@ -289,58 +703,31 @@
                 
                 grid.appendChild(card);
             });
+            
+            // Agregar animación fade-in
+            grid.classList.remove('fade-in');
+            setTimeout(() => grid.classList.add('fade-in'), 10);
         }
 
-        // Función para generar las tarjetas de aplicativos (tu función existente mejorada)
-        function generarAplicativos() {
-            const grid = document.getElementById('aplicativos-grid');
+        // Función para filtrar por área
+        function filterByArea(area) {
+            currentFilter = area;
+            generarAplicativos(area);
+            generarMesasAyuda(area);
             
-            aplicativos.forEach(app => {
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-lg shadow-sm border card-hover cursor-pointer';
-                
-                let logoContent = '';
-                if (app.tipoLogo === 'imagen') {
-                    logoContent = `
-                        <div class="logo-container icon-hover">
-                            <img src="${app.logo}" alt="${app.nombre}" class="logo-img" 
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div style="display:none; width:100%; height:100%; background:#f3f4f6; align-items:center; justify-content:center; font-size:12px; color:#6b7280;">
-                                Logo
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    logoContent = `
-                        <div class="w-12 h-12 ${app.color || 'bg-gray-100'} rounded-lg flex items-center justify-center icon-hover">
-                            ${app.logo}
-                        </div>
-                    `;
+            // Actualizar UI de las pestañas
+            const tabs = document.querySelectorAll('.tab-item');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-category') === area) {
+                    tab.classList.add('active');
                 }
-                
-                card.innerHTML = `
-                    <a href="${app.url}" target="_blank" rel="noopener noreferrer" class="block p-6">
-                        <div class="flex items-center space-x-3 mb-4">
-                            ${logoContent}
-                            <div class="flex-1 min-w-0">
-                                <h3 class="text-base font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2">
-                                    ${app.nombre}
-                                </h3>
-                            </div>
-                        </div>
-                        <p class="text-sm text-gray-600 line-clamp-2 mb-4">${app.descripcion}</p>
-                        <button class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-transparent hover:bg-blue-50 hover:border-blue-200 transition-colors">
-                            Acceder
-                        </button>
-                    </a>
-                `;
-                
-                grid.appendChild(card);
             });
         }
 
         // Inicializar la página cuando se carga
         document.addEventListener('DOMContentLoaded', function() {
+            actualizarContadores();
             generarMesasAyuda();
             generarAplicativos();
         });
