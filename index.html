@@ -65,7 +65,7 @@
         }
         .section-divider {
             border-top: 2px solid #e5e7eb;
-            margin: 3rem 0;
+            margin: 0rem 0;
             padding-top: 2rem;
         }
         .help-desk-card {
@@ -105,44 +105,60 @@
             }
         }
         
-        /* Estilos para el menú de pestañas */
+        /* Estilos para el menú de pestañas - CORREGIDO */
         .tab-menu {
             background: white;
             border-bottom: 1px solid #e5e7eb;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
             margin-bottom: 2rem;
             border-radius: 12px;
-            overflow: hidden;
+            overflow: visible;
+            position: relative;
         }
-        
+
         .tab-container {
             display: flex;
             overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            padding: 0 8px;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+            padding: 0 16px;
+            scroll-behavior: smooth;
         }
-        
+
         .tab-container::-webkit-scrollbar {
-            display: none;
+            height: 6px;
+        }
+
+        .tab-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .tab-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .tab-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
         
         .tab-item {
             flex: 0 0 auto;
-            padding: 14px 15px;
+            padding: 12px 16px;
             cursor: pointer;
             transition: all 0.3s ease;
             border-bottom: 3px solid transparent;
             font-weight: 500;
-            font-size: 14px;
+            font-size: 13px;
             color: #6b7280;
             white-space: nowrap;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             min-width: fit-content;
             position: relative;
-            margin: 0 2px;
+            margin: 0 1px;
             border-radius: 8px 8px 0 0;
         }
         
@@ -252,6 +268,34 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Botones de navegación del scroll */
+        .scroll-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .scroll-button:hover {
+            background-color: #f9fafb;
+            box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.15);
+        }
+
+        .scroll-left {
+            left: -12px;
+        }
+
+        .scroll-right {
+            right: -12px;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-custom">
@@ -307,51 +351,65 @@
 
             <!-- Menú de Pestañas ORDENADO ALFABÉTICAMENTE -->
             <div class="tab-menu">
-                <div class="tab-container" id="tab-container">
-                    <div class="tab-item active" onclick="filterByArea('todos')" data-category="todos">
-                        <span class="tab-icon">📋</span>
-                        <span class="tab-text">Todos</span>
-                        <span class="tab-count" id="count-todos">0</span>
-                    </div>
-                    <div class="tab-item" onclick="filterByArea('alimentos')" data-category="alimentos">
-                        <span class="tab-icon">🍽️</span>
-                        <span class="tab-text">A & B</span>
-                        <span class="tab-count" id="count-alimentos">0</span>
-                    </div>
-                    <div class="tab-item" onclick="filterByArea('compras')" data-category="compras">
-                        <span class="tab-icon">🛒</span>
-                        <span class="tab-text">Almacén & Compras</span>
-                        <span class="tab-count" id="count-compras">0</span>
-                    </div>
-                    <div class="tab-item" onclick="filterByArea('comercial')" data-category="comercial">
-                        <span class="tab-icon">💼</span>
-                        <span class="tab-text">Comercial</span>
-                        <span class="tab-count" id="count-comercial">0</span>
-                    </div>
-                    <div class="tab-item" onclick="filterByArea('contraloria')" data-category="contraloria">
-                        <span class="tab-icon">📊</span>
-                        <span class="tab-text">Contraloría</span>
-                        <span class="tab-count" id="count-contraloria">0</span>
-                    </div>
-                    <div class="tab-item" onclick="filterByArea('marketing')" data-category="marketing">
-                        <span class="tab-icon">📢</span>
-                        <span class="tab-text">Marketing</span>
-                        <span class="tab-count" id="count-marketing">0</span>
-                    </div>
-                    <div class="tab-item" onclick="filterByArea('operaciones')" data-category="operaciones">
-                        <span class="tab-icon">⚙️</span>
-                        <span class="tab-text">Operaciones</span>
-                        <span class="tab-count" id="count-operaciones">0</span>
-                    </div>
-                    <div class="tab-item" onclick="filterByArea('recursos-humanos')" data-category="recursos-humanos">
-                        <span class="tab-icon">👥</span>
-                        <span class="tab-text">Recursos Humanos</span>
-                        <span class="tab-count" id="count-recursos-humanos">0</span>
-                    </div>
-                    <div class="tab-item" onclick="filterByArea('tecnologia')" data-category="tecnologia">
-                        <span class="tab-icon">💻</span>
-                        <span class="tab-text">Tecnología</span>
-                        <span class="tab-count" id="count-tecnologia">0</span>
+                <div class="relative">
+                    <!-- Botones de navegación -->
+                    <button id="scroll-left" class="scroll-button scroll-left" style="display: none;">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </button>
+                    <button id="scroll-right" class="scroll-button scroll-right" style="display: none;">
+                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                    
+                    <div class="tab-container" id="tab-container">
+                        <div class="tab-item active" onclick="filterByArea('todos')" data-category="todos">
+                            <span class="tab-icon">📋</span>
+                            <span class="tab-text">Todos</span>
+                            <span class="tab-count" id="count-todos">0</span>
+                        </div>
+                        <div class="tab-item" onclick="filterByArea('alimentos')" data-category="alimentos">
+                            <span class="tab-icon">🍽️</span>
+                            <span class="tab-text">A & B</span>
+                            <span class="tab-count" id="count-alimentos">0</span>
+                        </div>
+                        <div class="tab-item" onclick="filterByArea('compras')" data-category="compras">
+                            <span class="tab-icon">🛒</span>
+                            <span class="tab-text">Almacén & Compras</span>
+                            <span class="tab-count" id="count-compras">0</span>
+                        </div>
+                        <div class="tab-item" onclick="filterByArea('comercial')" data-category="comercial">
+                            <span class="tab-icon">💼</span>
+                            <span class="tab-text">Comercial</span>
+                            <span class="tab-count" id="count-comercial">0</span>
+                        </div>
+                        <div class="tab-item" onclick="filterByArea('contraloria')" data-category="contraloria">
+                            <span class="tab-icon">📊</span>
+                            <span class="tab-text">Contraloría</span>
+                            <span class="tab-count" id="count-contraloria">0</span>
+                        </div>
+                        <div class="tab-item" onclick="filterByArea('marketing')" data-category="marketing">
+                            <span class="tab-icon">📢</span>
+                            <span class="tab-text">Marketing</span>
+                            <span class="tab-count" id="count-marketing">0</span>
+                        </div>
+                        <div class="tab-item" onclick="filterByArea('operaciones')" data-category="operaciones">
+                            <span class="tab-icon">⚙️</span>
+                            <span class="tab-text">Operaciones</span>
+                            <span class="tab-count" id="count-operaciones">0</span>
+                        </div>
+                        <div class="tab-item" onclick="filterByArea('recursos-humanos')" data-category="recursos-humanos">
+                            <span class="tab-icon">👥</span>
+                            <span class="tab-text">Recursos Humanos</span>
+                            <span class="tab-count" id="count-recursos-humanos">0</span>
+                        </div>
+                        <div class="tab-item" onclick="filterByArea('tecnologia')" data-category="tecnologia">
+                            <span class="tab-icon">💻</span>
+                            <span class="tab-text">Tecnología</span>
+                            <span class="tab-count" id="count-tecnologia">0</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -734,11 +792,43 @@
             });
         }
 
+        // Función para manejar el scroll del menú de pestañas
+        function initTabScroll() {
+            const container = document.getElementById('tab-container');
+            const scrollLeftBtn = document.getElementById('scroll-left');
+            const scrollRightBtn = document.getElementById('scroll-right');
+            
+            function updateScrollButtons() {
+                const canScrollLeft = container.scrollLeft > 0;
+                const canScrollRight = container.scrollLeft < (container.scrollWidth - container.clientWidth);
+                
+                scrollLeftBtn.style.display = canScrollLeft ? 'block' : 'none';
+                scrollRightBtn.style.display = canScrollRight ? 'block' : 'none';
+            }
+            
+            // Eventos de scroll
+            container.addEventListener('scroll', updateScrollButtons);
+            
+            // Eventos de los botones
+            scrollLeftBtn.addEventListener('click', () => {
+                container.scrollBy({ left: -200, behavior: 'smooth' });
+            });
+            
+            scrollRightBtn.addEventListener('click', () => {
+                container.scrollBy({ left: 200, behavior: 'smooth' });
+            });
+            
+            // Verificar al cargar y redimensionar
+            updateScrollButtons();
+            window.addEventListener('resize', updateScrollButtons);
+        }
+
         // Inicializar la página cuando se carga
         document.addEventListener('DOMContentLoaded', function() {
             actualizarContadores();
             generarMesasAyuda();
             generarAplicativos();
+            initTabScroll(); // Inicializar el scroll
         });
     </script>
 </body>
