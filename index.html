@@ -308,7 +308,7 @@
                         <img src="./logos/448 (1).png" alt="OSH Logo" class="">
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-900">Portal de Aplicaciones OSH</h1>
+                        <h1 class="text-2xl font-bold text-gray-900">Portal de Aplicaciones OSH Hotels</h1>
                         <p class="text-sm text-gray-600">Acceso a aplicativos corporativos</p>
                     </div>
                 </div>
@@ -435,7 +435,7 @@
         // Configuración de Mesas de Ayuda
         const mesasAyuda = [
             {
-                nombre: "Mesa de Ayuda IT OSH 🧑‍💻🚀",
+                nombre: "Mesa de Ayuda IT 🧑‍💻",
                 descripcion: "Soporte técnico general y sistemas",
                 url: "https://forms.office.com/pages/responsepage.aspx?id=LSOs1WrKOE6jvZRXlTgLuhOUaRhLywpFjBpwy5YIjZ1URE4xUjBQN0JONTUyMkJaWEdFSk5PUEJRRS4u&origin=lprLink&route=shorturl",
                 icono: `<svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -446,7 +446,7 @@
                 categorias: ["tecnologia"]
             },
             {
-                nombre: "Requerimiento Marketing",
+                nombre: "Requerimientos Marketing",
                 descripcion: "Soporte para campañas y estrategias de marketing",
                 url: "https://forms.office.com/Pages/ResponsePage.aspx?id=LSOs1WrKOE6jvZRXlTgLuoHIs_az5aBOjudEoR0a8jFUQU1ITzI5ODdCQTNIMVRUVVZIWlBTTDM2Vi4u",
                 icono: `<svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -466,18 +466,7 @@
                 tipoLogo: "svg",
                 estiloEspecial: "help-desk-card",
                 categorias: ["compras"]
-            },
-            {
-                nombre: "Solicitudes de Glowing Desk",
-                descripcion: "Solicitudes de GlowingDesk",
-                url: "https://forms.cloud.microsoft/pages/responsepage.aspx?id=LSOs1WrKOE6jvZRXlTgLuhOUaRhLywpFjBpwy5YIjZ1UNFdBREI3V0VOTk9CWVczQTRISVdTU09VOS4u&origin=lprLink&route=shorturl", // Reemplaza con tu URL real
-                icono: `<svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z"/>
-                </svg>`,
-                tipoLogo: "svg",
-                estiloEspecial: "help-desk-card",
-                categorias: ["operaciones"]
-            },
+            }
         ];
 
         // Configuración de aplicativos SIN DIRECCIÓN GENERAL
@@ -576,7 +565,7 @@
                 categorias: ["contraloria", "alimentos", "tecnologia"]
             },
             {
-                nombre: "Opera Cloud",
+                nombre: "OPERA Cloud",
                 descripcion: "Sistema de gestión hotelera",
                 url: "https://mtucu2.oraclehospitality.us-ashburn-1.ocs.oraclecloud.com/OPERA9/opera/operacloud/",
                 logo: "logos/opera_cloud_logo.ico",
@@ -604,7 +593,7 @@
                 categorias: ["operaciones", "tecnologia"]
             },
             {
-                nombre: "Salto",
+                nombre: "Salto Space",
                 descripcion: "Control de accesos",
                 url: "http://oshgetsvrcda:8100/index.html#!/zones",
                 logo: "logos/Salto_icono.ico",
@@ -614,7 +603,7 @@
 
             // Tecnología
             {
-                nombre: "Plantillas Corporativas",
+                nombre: "Plantillas Marketing Corporativas",
                 descripcion: "Sharepoint de Plantillas Corporativas",
                 url: "https://oshgetsemani.sharepoint.com/sites/MERCADEOYCOMUNICACIONESOSH/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FMERCADEOYCOMUNICACIONESOSH%2FShared%20Documents%2FGeneral%2F0%2E1%20Comunicaciones%20y%20Mercadeo%2FBonos%20Marketing%2FPlantillas%20OSH&p=true&ct=1752000080521&or=OWA%2DNT%2DMail&cid=92c4bdca%2D335d%2D92c3%2Db97d%2De3d14a91c393&ga=1",
                 logo: "logos/SharePoint-Logo.wine.png",
@@ -624,7 +613,7 @@
 
             // Recursos Humanos
             {
-                nombre: "LINKEDIN",
+                nombre: "Linkedin",
                 descripcion: "Red profesional para conectar talentos",
                 url: "https://www.linkedin.com/company/oshhotels/",
                 logo: "logos/linkedin.PNG",
@@ -690,12 +679,15 @@
 
         // Función para generar las tarjetas de mesas de ayuda
         function generarMesasAyuda(filtro = 'todos') {
-    const grid = document.getElementById('mesas-ayuda-grid');
+        const grid = document.getElementById('mesas-ayuda-grid');
     
-    const mesasFiltradas = filtro === 'todos' 
-        ? mesasAyuda 
-        : mesasAyuda.filter(mesa => !mesa.categorias || mesa.categorias.includes(filtro));
-    
+        const mesasFiltradas = filtro === 'todos' 
+            ? mesasAyuda 
+            : mesasAyuda.filter(mesa => !mesa.categorias || mesa.categorias.includes(filtro));
+
+        // Ordenar alfabéticamente por nombre
+        mesasFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
     // Limpiar solo si hay cambio de filtro
     if (grid.children.length === 0 || filtro !== 'todos') {
         grid.innerHTML = '';
@@ -737,10 +729,15 @@
             const grid = document.getElementById('aplicativos-grid');
             grid.innerHTML = ''; // Limpiar grid
             
+               // Filtrar por categoría
             const aplicativosFiltrados = filtro === 'todos' 
                 ? aplicativos 
                 : aplicativos.filter(app => app.categorias.includes(filtro));
-            
+
+            // Ordenar alfabéticamente por nombre
+            aplicativosFiltrados.sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+            // Generar tarjetas
             aplicativosFiltrados.forEach(app => {
                 const card = document.createElement('div');
                 card.className = 'bg-white rounded-lg shadow-sm border card-hover cursor-pointer relative';
