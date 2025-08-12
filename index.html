@@ -29,7 +29,7 @@
         .bg-gradient-custom {
             background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         }
-        /* Logos más pequeños para aplicativos */
+        /* Updated logo styles for sidebar layout */
         .logo-container-small {
             width: 36px;
             height: 36px;
@@ -46,7 +46,6 @@
             height: 24px;
             object-fit: contain;
         }
-        /* Logos normales para mesas de ayuda */
         .logo-container {
             width: 48px;
             height: 48px;
@@ -63,373 +62,311 @@
             height: 32px;
             object-fit: contain;
         }
+        
+        /* New sidebar styles */
+        .sidebar {
+            width: 240px;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            z-index: 10;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #f9fafb;
+            color: #374151;
+        }
+        
+        .sidebar-item.active {
+            background-color: #eff6ff;
+            color: #2563eb;
+            border-left-color: #2563eb;
+            font-weight: 500;
+        }
+        
+        .main-content {
+            margin-left: 240px;
+            min-height: 100vh;
+        }
+        
+        /* Updated grid for better spacing */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* increased min-width from 140px to 180px to make cards wider */
+            gap: 8px;
+            margin-top: 24px;
+            padding: 16px;
+        }
+        
+        /* Responsive design for mobile */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .apps-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+                gap: 6px;
+            }
+        }
+
+        /* Logos más pequeños para aplicativos */
+        /* Logos normales para mesas de ayuda */
         .section-divider {
             border-top: 2px solid #e5e7eb;
             margin: 0rem 0;
             padding-top: 2rem;
         }
-        .help-desk-card {
-            background: linear-gradient(135deg, white 0%, white 100%);
-            border: 2px solid white;
-        }
-        .help-desk-card:hover {
-            background: linear-gradient(135deg, white 0%, white 100%);
-        }
         
-        /* Grid de 5 columnas fijo */
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1rem;
-        }
-        
-        /* Responsive para móviles */
-        @media (max-width: 640px) {
-            .apps-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.75rem;
-            }
-        }
-        
-        @media (min-width: 641px) and (max-width: 768px) {
-            .apps-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0.875rem;
-            }
-        }
-        
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .apps-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 1rem;
-            }
-        }
-        
-        /* Estilos para el menú de pestañas - CORREGIDO */
-        .tab-menu {
+        .app-card {
             background: white;
-            border-bottom: 1px solid #e5e7eb;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-            border-radius: 12px;
-            overflow: visible;
-            position: relative;
-        }
-
-        .tab-container {
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 6px;
             display: flex;
-            overflow-x: auto;
-            scrollbar-width: thin;
-            scrollbar-color: #cbd5e1 #f1f5f9;
-            padding: 0 16px;
-            scroll-behavior: smooth;
-        }
-
-        .tab-container::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .tab-container::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 3px;
-        }
-
-        .tab-container::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 3px;
-        }
-
-        .tab-container::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-        
-        .tab-item {
-            flex: 0 0 auto;
-            padding: 12px 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
-            font-weight: 500;
-            font-size: 13px;
-            color: #6b7280;
-            white-space: nowrap;
-            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 6px;
-            min-width: fit-content;
-            position: relative;
-            margin: 0 1px;
-            border-radius: 8px 8px 0 0;
-        }
-        
-        .tab-item:hover {
-            background-color: #f9fafb;
-            color: #374151;
-        }
-        
-        .tab-item.active {
-            color: #2563eb;
-            border-bottom-color: #2563eb;
-            background-color: #eff6ff;
-        }
-        
-        .tab-icon {
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-        
-        .tab-text {
-            flex-shrink: 0;
-            min-width: max-content;
-        }
-        
-        /* Badge para mostrar cantidad de aplicativos */
-        .tab-count {
-            background-color: #e5e7eb;
-            color: #6b7280;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 7px;
-            border-radius: 10px;
-            margin-left: 4px;
-            min-width: 20px;
             text-align: center;
-            flex-shrink: 0;
+            min-height: 50px; /* reduced height from 60px to 50px since we removed the button */
+            position: relative;
         }
-        
-        .tab-item.active .tab-count {
-            background-color: #dbeafe;
-            color: #2563eb;
+        .app-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1);
         }
-        
-        /* Indicador de múltiples categorías */
-        .multi-category-indicator {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 8px;
-            height: 8px;
-            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-            border-radius: 50%;
-            opacity: 0.7;
-        }
-        
-        /* Indicador especial para aplicativos globales */
-        .global-app-indicator {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 8px;
-            height: 8px;
-            background: linear-gradient(45deg, #10b981, #3b82f6);
-            border-radius: 50%;
-            opacity: 0.8;
-        }
-        
-        /* Responsive para móviles */
-        @media (max-width: 768px) {
-            .tab-item {
-                padding: 12px 14px;
-                font-size: 13px;
-                gap: 6px;
-            }
-            .tab-icon {
-                font-size: 14px;
-            }
-            .tab-count {
-                font-size: 10px;
-                padding: 2px 5px;
-                min-width: 18px;
-            }
-        }
-        
-        @media (max-width: 640px) {
-            .tab-item {
-                padding: 10px 12px;
-                font-size: 12px;
-                gap: 4px;
-            }
-            .tab-icon {
-                font-size: 13px;
-            }
-            .tab-count {
-                font-size: 9px;
-                padding: 2px 4px;
-                min-width: 16px;
-            }
-        }
-        
-        /* Animación para el cambio de contenido */
         .fade-in {
-            animation: fadeIn 0.3s ease-in;
+            animation: fadeIn 0.5s ease-in;
         }
-        
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Botones de navegación del scroll */
+        .section-divider {
+            border-top: 2px solid #e5e7eb;
+            padding-top: 48px;
+            margin-top: 48px;
+        }
+        .tab-menu {
+            margin-bottom: 32px;
+            position: relative;
+        }
+        .tab-container {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: 0 40px;
+        }
+        .tab-container::-webkit-scrollbar {
+            display: none;
+        }
+        .tab-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+        .tab-item:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+        .tab-item.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+        .tab-icon {
+            font-size: 16px;
+        }
+        .tab-text {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .tab-count {
+            background: rgba(255, 255, 255, 0.2);
+            color: inherit;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+        .tab-item.active .tab-count {
+            background: rgba(255, 255, 255, 0.3);
+        }
         .scroll-button {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            z-index: 10;
             background: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            padding: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
             border: 1px solid #e5e7eb;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
-        .scroll-button:hover {
-            background-color: #f9fafb;
-            box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.15);
-        }
-
         .scroll-left {
-            left: -12px;
+            left: 0;
         }
-
         .scroll-right {
-            right: -12px;
+            right: 0;
+        }
+        .scroll-button:hover {
+            background: #f9fafb;
         }
     </style>
 </head>
+
 <body class="min-h-screen bg-gradient-custom">
-    <!-- Header -->
-    <header class="bg-white shadow-sm border-b">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                        <img src="./logos/448 (1).png" alt="OSH Logo" class="">
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-900">Portal de Aplicaciones OSH Hotels</h1>
-                        <p class="text-sm text-gray-600">Acceso a aplicativos corporativos</p>
-                    </div>
+    <!-- New sidebar navigation -->
+    <div class="sidebar" id="sidebar">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center space-x-3">
+                <div>
+                    <h1 class="text-lg font-bold text-gray-900">Areas</h1>
                 </div>
             </div>
         </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        <!-- Sección de Mesas de Ayuda - MOVIDA ARRIBA -->
-        <div class="mb-12">
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-2 flex items-center">
-                    <svg class="w-6 h-6 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192L5.636 18.364M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    </svg>
-                    Requerimientos y Mesas de Ayuda
-                </h2>
-                <p class="text-gray-600">Solicita soporte técnico y servicios especializados</p>
+        <nav class="py-4">
+            <div class="sidebar-item active" onclick="filterByArea('todos')" data-category="todos">
+                <span class="mr-3">📋</span>
+                <span>Todos</span>
+                <span class="ml-auto bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs" id="count-todos">0</span>
             </div>
-
-            <!-- Grid de Mesas de Ayuda -->
-            <div class="apps-grid fade-in" id="mesas-ayuda-grid">
-                <!-- Las mesas de ayuda se generarán dinámicamente con JavaScript -->
+            <div class="sidebar-item" onclick="filterByArea('alimentos')" data-category="alimentos">
+                <span class="mr-3">🍽️</span>
+                <span>A & B</span>
+                <span class="ml-auto bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs" id="count-alimentos">0</span>
             </div>
-        </div>
-
-        <!-- Separador -->
-        <div class="section-divider">
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold text-gray-900 mb-2 flex items-center">
-                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                    </svg>
-                    Aplicativos Disponibles
-                </h2>
-                <p class="text-gray-600">Selecciona el aplicativo al que deseas acceder</p>
+            <div class="sidebar-item" onclick="filterByArea('marketing')" data-category="marketing">
+                <span class="mr-3">📢</span>
+                <span>Marketing</span>
+                <span class="ml-auto bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs" id="count-marketing">0</span>
             </div>
+            <div class="sidebar-item" onclick="filterByArea('operaciones')" data-category="operaciones">
+                <span class="mr-3">⚙️</span>
+                <span>Operaciones</span>
+                <span class="ml-auto bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs" id="count-operaciones">0</span>
+            </div>
+            <div class="sidebar-item" onclick="filterByArea('comercial')" data-category="comercial">
+                <span class="mr-3">💼</span>
+                <span>Comercial</span>
+                <span class="ml-auto bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs" id="count-comercial">0</span>
+            </div>
+            <div class="sidebar-item" onclick="filterByArea('contraloria')" data-category="contraloria">
+                <span class="mr-3">📊</span>
+                <span>Contraloría</span>
+                <span class="ml-auto bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs" id="count-contraloria">0</span>
+            </div>
+            <div class="sidebar-item" onclick="filterByArea('compras')" data-category="compras">
+                <span class="mr-3">🛒</span>
+                <span>Almacén & Compras</span>
+                <span class="ml-auto bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs" id="count-compras">0</span>
+            </div>
+            <div class="sidebar-item" onclick="filterByArea('recursos-humanos')" data-category="recursos-humanos">
+                <span class="mr-3">👥</span>
+                <span>Recursos Humanos</span>
+                <span class="ml-auto bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs" id="count-recursos-humanos">0</span>
+            </div>
+            <div class="sidebar-item" onclick="filterByArea('tecnologia')" data-category="tecnologia">
+                <span class="mr-3">💻</span>
+                <span>Tecnología</span>
+                <span class="ml-auto bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs" id="count-tecnologia">0</span>
+            </div>
+        </nav>
+    </div>
 
-            <!-- Menú de Pestañas ORDENADO ALFABÉTICAMENTE -->
-            <div class="tab-menu">
-                <div class="relative">
-                    <!-- Botones de navegación -->
-                    <button id="scroll-left" class="scroll-button scroll-left" style="display: none;">
-                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                        </svg>
-                    </button>
-                    <button id="scroll-right" class="scroll-button scroll-right" style="display: none;">
-                        <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </button>
-                    
-                    <div class="tab-container" id="tab-container">
-                        <div class="tab-item active" onclick="filterByArea('todos')" data-category="todos">
-                            <span class="tab-icon">📋</span>
-                            <span class="tab-text">Todos</span>
-                            <span class="tab-count" id="count-todos">0</span>
-                        </div>
-                        <div class="tab-item" onclick="filterByArea('alimentos')" data-category="alimentos">
-                            <span class="tab-icon">🍽️</span>
-                            <span class="tab-text">A & B</span>
-                            <span class="tab-count" id="count-alimentos">0</span>
-                        </div>
-                        <div class="tab-item" onclick="filterByArea('compras')" data-category="compras">
-                            <span class="tab-icon">🛒</span>
-                            <span class="tab-text">Almacén & Compras</span>
-                            <span class="tab-count" id="count-compras">0</span>
-                        </div>
-                        <div class="tab-item" onclick="filterByArea('comercial')" data-category="comercial">
-                            <span class="tab-icon">💼</span>
-                            <span class="tab-text">Comercial</span>
-                            <span class="tab-count" id="count-comercial">0</span>
-                        </div>
-                        <div class="tab-item" onclick="filterByArea('contraloria')" data-category="contraloria">
-                            <span class="tab-icon">📊</span>
-                            <span class="tab-text">Contraloría</span>
-                            <span class="tab-count" id="count-contraloria">0</span>
-                        </div>
-                        <div class="tab-item" onclick="filterByArea('marketing')" data-category="marketing">
-                            <span class="tab-icon">📢</span>
-                            <span class="tab-text">Marketing</span>
-                            <span class="tab-count" id="count-marketing">0</span>
-                        </div>
-                        <div class="tab-item" onclick="filterByArea('operaciones')" data-category="operaciones">
-                            <span class="tab-icon">⚙️</span>
-                            <span class="tab-text">Operaciones</span>
-                            <span class="tab-count" id="count-operaciones">0</span>
-                        </div>
-                        <div class="tab-item" onclick="filterByArea('recursos-humanos')" data-category="recursos-humanos">
-                            <span class="tab-icon">👥</span>
-                            <span class="tab-text">Recursos Humanos</span>
-                            <span class="tab-count" id="count-recursos-humanos">0</span>
-                        </div>
-                        <div class="tab-item" onclick="filterByArea('tecnologia')" data-category="tecnologia">
-                            <span class="tab-icon">💻</span>
-                            <span class="tab-text">Tecnología</span>
-                            <span class="tab-count" id="count-tecnologia">0</span>
+    <!-- Main content area with sidebar offset -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <!-- Mobile menu button -->
+                        <button class="md:hidden p-2 rounded-md hover:bg-gray-100" onclick="toggleMobileSidebar()">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            </svg>
+                        </button>
+                        <!-- Updated main header with OSH Hotels branding -->
+                        <div class="flex items-center space-x-3">
+                            <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                                <img src="./logos/448 (1).png" alt="OSH Hotels" class="w-12 h-12 object-contain">
+                            </div>
+                            <div>
+                                <h1 class="text-2xl font-bold text-gray-900">Portal de Aplicaciones OSH Hotels</h1>
+                                <p class="text-sm text-gray-600">Acceso a aplicativos corporativos</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </header>
 
-            <!-- Grid de Aplicativos - 5 COLUMNAS FIJAS -->
+        <!-- Main Content -->
+        <main class="px-6 py-8">
+            <!-- Search bar -->
+            <div class="mb-8">
+                <div class="relative max-w-md">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    <input type="text" placeholder="Search integrations..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+            </div>
+            
+            <!-- Updated grid layout for integrations -->
             <div class="apps-grid fade-in" id="aplicativos-grid">
                 <!-- Los aplicativos se generarán dinámicamente con JavaScript -->
             </div>
-        </div>
 
-        <!-- Footer Info -->
-        <div class="mt-12 text-center">
-            <div class="bg-white rounded-lg p-6 shadow-sm">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">¿Necesitas ayuda adicional?</h3>
-                <p class="text-gray-600 mb-4">
-                    Si tienes problemas para acceder a algún aplicativo o necesitas soporte técnico especializado, utiliza nuestras mesas de ayuda.
-                </p>
+            <!-- Mesas de Ayuda Grid -->
+            <div class="apps-grid fade-in" id="mesas-ayuda-grid">
+                <!-- Las mesas de ayuda se generarán dinámicamente con JavaScript -->
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <script>
         // Configuración de Mesas de Ayuda
@@ -442,7 +379,6 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                 </svg>`,
                 tipoLogo: "svg",
-                estiloEspecial: "help-desk-card",
                 categorias: ["tecnologia"]
             },
             {
@@ -453,18 +389,16 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path>
                 </svg>`,
                 tipoLogo: "svg",
-                estiloEspecial: "help-desk-card",
                 categorias: ["marketing"]
             },
             {
                 nombre: "Solicitudes de Compra",
                 descripcion: "Solicitudes de compras y suministros",
-                url: "https://formularioalmacen.onrender.com", // Reemplaza con tu URL real
+                url: "https://formularioalmacen.onrender.com",
                 icono: `<svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                 </svg>`,
                 tipoLogo: "svg",
-                estiloEspecial: "help-desk-card",
                 categorias: ["compras"]
             }
         ];
@@ -679,59 +613,61 @@
 
         // Función para generar las tarjetas de mesas de ayuda
         function generarMesasAyuda(filtro = 'todos') {
-        const grid = document.getElementById('mesas-ayuda-grid');
+            const grid = document.getElementById('mesas-ayuda-grid');
     
-        const mesasFiltradas = filtro === 'todos' 
-            ? mesasAyuda 
-            : mesasAyuda.filter(mesa => !mesa.categorias || mesa.categorias.includes(filtro));
+            const mesasFiltradas = filtro === 'todos' 
+                ? mesasAyuda
+                : mesasAyuda.filter(mesa => !mesa.categorias || mesa.categorias.includes(filtro));
 
-        // Ordenar alfabéticamente por nombre
-        mesasFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
+            // Ordenar alfabéticamente por nombre
+            mesasFiltradas.sort((a, b) => a.nombre.localeCompare(b.nombre));
 
-    // Limpiar solo si hay cambio de filtro
-    if (grid.children.length === 0 || filtro !== 'todos') {
-        grid.innerHTML = '';
-        
-        mesasFiltradas.forEach(mesa => {
-            const card = document.createElement('div');
-            card.className = 'bg-white rounded-lg shadow-sm border card-hover cursor-pointer relative';
-            
-            // Indicador especial para mesas de ayuda
-            const helpIndicator = '<div style="position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: linear-gradient(45deg, #f59e0b, #ef4444); border-radius: 50%; opacity: 0.8;" title="Mesa de Ayuda"></div>';
-            
-            card.innerHTML = `
-                ${helpIndicator}
-                <a href="${mesa.url}" target="_blank" rel="noopener noreferrer" class="block p-3">
-                    <div class="flex flex-col items-center text-center">
-                        <div class="logo-container-small icon-hover">
-                            <div class="w-6 h-6 flex items-center justify-center">
+            // Limpiar solo si hay cambio de filtro
+            if (grid.children.length === 0 || filtro !== 'todos') {
+                grid.innerHTML = '';
+                
+                mesasFiltradas.forEach(mesa => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-lg shadow-sm border card-hover cursor-pointer relative p-2'; /* reduced padding from p-3 to p-2 */
+                    
+                    let logoContent = '';
+                    if (mesa.tipoLogo === 'svg') {
+                        logoContent = `
+                            <div class="w-12 h-12 mb-4 mx-auto flex items-center justify-center">
                                 ${mesa.icono}
                             </div>
-                        </div>
-                        <h3 class="text-xs font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2 mt-2 mb-1">
-                            ${mesa.nombre}
-                        </h3>
-                        <p class="text-xs text-gray-600 line-clamp-2 mb-2">${mesa.descripcion}</p>
-                        <button class="w-full px-2 py-1 border border-gray-300 rounded text-xs font-medium text-gray-700 bg-transparent hover:bg-orange-50 hover:border-orange-200 transition-colors">
-                            Solicitar Ayuda
-                        </button>
-                    </div>
-                </a>
-            `;
-            
-            grid.appendChild(card);
-        });
-    }
-}
+                        `;
+                    } else {
+                        logoContent = `
+                            <div class="w-12 h-12 mb-4 mx-auto">
+                                <img src="${mesa.logo}" alt="${mesa.nombre}" class="w-full h-full object-contain rounded-lg">
+                            </div>
+                        `;
+                    }
+                    
+                    card.innerHTML = `
+                        <a href="${mesa.url}" target="_blank" rel="noopener noreferrer" class="block text-center">
+                            ${logoContent}
+                            <h3 class="text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors mb-2">
+                                ${mesa.nombre}
+                            </h3>
+                            <p class="text-xs text-gray-600">${mesa.descripcion}</p>
+                        </a>
+                    `;
+                    
+                    grid.appendChild(card);
+                });
+            }
+        }
 
         // Función para generar las tarjetas de aplicativos - GRID DE 5 COLUMNAS
         function generarAplicativos(filtro = 'todos') {
             const grid = document.getElementById('aplicativos-grid');
             grid.innerHTML = ''; // Limpiar grid
             
-               // Filtrar por categoría
-            const aplicativosFiltrados = filtro === 'todos' 
-                ? aplicativos 
+            // Filtrar por categoría
+            const aplicativosFiltrados = filtro === 'todos'
+                ? aplicativos
                 : aplicativos.filter(app => app.categorias.includes(filtro));
 
             // Ordenar alfabéticamente por nombre
@@ -740,30 +676,30 @@
             // Generar tarjetas
             aplicativosFiltrados.forEach(app => {
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded-lg shadow-sm border card-hover cursor-pointer relative';
+                card.className = 'bg-white rounded-lg shadow-sm border card-hover cursor-pointer relative p-2'; /* reduced padding from p-3 to p-2 */
                 
                 // Indicador para aplicativos globales o múltiples categorías
                 let indicator = '';
                 if (app.esGlobal) {
-                    indicator = '<div class="global-app-indicator" title="Disponible para todas las áreas"></div>';
+                    indicator = '<div style="position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: linear-gradient(45deg, #10b981, #3b82f6); border-radius: 50%; opacity: 0.8;" title="Disponible para todas las áreas"></div>';
                 } else if (app.categorias.length > 1) {
-                    indicator = '<div class="multi-category-indicator" title="Disponible en múltiples áreas"></div>';
+                    indicator = '<div style="position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: linear-gradient(45deg, #f59e0b, #ef4444); border-radius: 50%; opacity: 0.8;" title="Disponible en múltiples áreas"></div>';
                 }
                 
                 let logoContent = '';
                 if (app.tipoLogo === 'imagen') {
                     logoContent = `
-                        <div class="logo-container-small icon-hover">
-                            <img src="${app.logo}" alt="${app.nombre}" class="logo-img-small" 
+                        <div class="w-12 h-12 mb-4 mx-auto">
+                            <img src="${app.logo}" alt="${app.nombre}" class="w-full h-full object-contain rounded-lg"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div style="display:none; width:100%; height:100%; background:#f3f4f6; align-items:center; justify-content:center; font-size:10px; color:#6b7280;">
+                            <div style="display:none; width:100%; height:100%; background:#f3f4f6; align-items:center; justify-content:center; font-size:12px; color:#6b7280; border-radius: 8px;">
                                 Logo
                             </div>
                         </div>
                     `;
                 } else {
                     logoContent = `
-                        <div class="w-9 h-9 ${app.color || 'bg-gray-100'} rounded-lg flex items-center justify-center icon-hover">
+                        <div class="w-12 h-12 ${app.color || 'bg-gray-100'} rounded-lg flex items-center justify-center mb-4 mx-auto">
                             ${app.logo}
                         </div>
                     `;
@@ -771,17 +707,12 @@
                 
                 card.innerHTML = `
                     ${indicator}
-                    <a href="${app.url}" target="_blank" rel="noopener noreferrer" class="block p-3">
-                        <div class="flex flex-col items-center text-center">
-                            ${logoContent}
-                            <h3 class="text-xs font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2 mt-2 mb-1">
-                                ${app.nombre}
-                            </h3>
-                            <p class="text-xs text-gray-600 line-clamp-2 mb-2">${app.descripcion}</p>
-                            <button class="w-full px-2 py-1 border border-gray-300 rounded text-xs font-medium text-gray-700 bg-transparent hover:bg-blue-50 hover:border-blue-200 transition-colors">
-                                Acceder
-                            </button>
-                        </div>
+                    <a href="${app.url}" target="_blank" rel="noopener noreferrer" class="block text-center">
+                        ${logoContent}
+                        <h3 class="text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors mb-2">
+                            ${app.nombre}
+                        </h3>
+                        <p class="text-xs text-gray-600">${app.descripcion}</p>
                     </a>
                 `;
                 
@@ -799,14 +730,22 @@
             generarAplicativos(area);
             generarMesasAyuda(area);
             
-            // Actualizar UI de las pestañas
-            const tabs = document.querySelectorAll('.tab-item');
-            tabs.forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.getAttribute('data-category') === area) {
-                    tab.classList.add('active');
+            // Actualizar UI de las categorías del sidebar
+            const categories = document.querySelectorAll('.sidebar-item');
+            categories.forEach(cat => {
+                cat.classList.remove('bg-blue-50', 'text-blue-700', 'border-blue-200');
+                cat.classList.add('text-gray-700', 'hover:bg-gray-50');
+                if (cat.getAttribute('data-category') === area) {
+                    cat.classList.remove('text-gray-700', 'hover:bg-gray-50');
+                    cat.classList.add('bg-blue-50', 'text-blue-700', 'border-blue-200');
                 }
             });
+        }
+
+        // Función para toggle del sidebar móvil
+        function toggleMobileSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('mobile-open');
         }
 
         // Función para manejar el scroll del menú de pestañas
@@ -843,9 +782,39 @@
         // Inicializar la página cuando se carga
         document.addEventListener('DOMContentLoaded', function() {
             actualizarContadores();
-            generarMesasAyuda();
-            generarAplicativos();
-            initTabScroll(); // Inicializar el scroll
+            generarAplicativos('todos');
+            generarMesasAyuda('todos');
+            
+            // Agregar event listeners a las categorías del sidebar
+            const categories = document.querySelectorAll('.sidebar-item');
+            categories.forEach(cat => {
+                cat.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const category = this.getAttribute('data-category');
+                    filterByArea(category);
+                });
+            });
+
+            // Funcionalidad de búsqueda
+            const searchInput = document.querySelector('input[placeholder="Search integrations..."]');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const grid = document.getElementById('aplicativos-grid');
+                    const cards = grid.querySelectorAll('.bg-white');
+                    
+                    cards.forEach(card => {
+                        const title = card.querySelector('h3').textContent.toLowerCase();
+                        const description = card.querySelector('p').textContent.toLowerCase();
+                        
+                        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            }
         });
     </script>
 </body>
