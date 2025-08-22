@@ -23,7 +23,7 @@
     i18n: {
       es: {
         title: '¡Hola! 👋',
-        subtitle: 'Soy OSHI tu asistente IA de OSH Hotels. Estoy aquí para ayudarte.',
+        subtitle: 'Soy OSHI tu asistente IA de OSH. Estoy aquí para ayudarte.',
         footer: 'Atención 24/7 · Respuesta inmediata',
         getStarted: 'Nueva conversación',
         inputPlaceholder: 'Escribe tu mensaje…',
@@ -35,6 +35,83 @@
     ],
     // resto de tus opciones...
   });
+  
+  // ...tu createChat(...) aquí arriba
+
+  // Limpia la marca de "ya mostrado" para que puedas probar cada recarga:
+  // (borra esta línea cuando lo dejes en producción)
+  sessionStorage.removeItem('n8n_nudge_shown');
+
+  function showChatNudge(text='¿Necesitas ayuda? ¡Chatea conmigo! 💬') {
+    if (sessionStorage.getItem('n8n_nudge_shown')) return;
+
+    const el = document.createElement('div');
+    el.id = 'chat-nudge';
+    el.textContent = text;
+
+    el.addEventListener('click', () => {
+      dismissNudge(el);
+      // Intento robusto de abrir el chat: busca un botón fijo cerca de la esquina
+      const cand = [...document.querySelectorAll('button, div, a')].find(n => {
+        const s = getComputedStyle(n); const r = n.getBoundingClientRect();
+        const sizeOK = Math.abs(r.width - r.height) < 12 && r.width >= 48 && r.width <= 88;
+        const fixed = s.position === 'fixed';
+        const corner = r.right > innerWidth - 160 && r.bottom > innerHeight - 160;
+        return fixed && corner && sizeOK;
+      });
+      if (cand) cand.dispatchEvent(new MouseEvent('click', { bubbles:true }));
+    });
+
+    document.body.appendChild(el);
+    sessionStorage.setItem('n8n_nudge_shown', '1');
+    setTimeout(() => dismissNudge(el), 7000);
+  }
+
+  function dismissNudge(el){ if(!el) return; el.classList.add('hide'); setTimeout(() => el.remove(), 280); }
+
+  // Muestra el nudge 1.2s después de que cargue la página
+  window.addEventListener('load', () => setTimeout(showChatNudge, 1200));
+
+    function attachHideOnChatButton() {
+    const findBtn = () => {
+      return [...document.querySelectorAll('button, div, a')].find(n => {
+        const s = getComputedStyle(n);
+        const r = n.getBoundingClientRect();
+        const sizeOK = Math.abs(r.width - r.height) < 12 && r.width >= 48 && r.width <= 88;
+        const fixed  = s.position === 'fixed';
+        const corner = r.right > innerWidth - 160 && r.bottom > innerHeight - 160;
+        return fixed && corner && sizeOK;
+      });
+    };
+
+    const handler = () => {
+      const n = document.getElementById('chat-nudge');
+      if (n) dismissNudge(n);
+    };
+
+    // Si ya existe el botón, enganchamos; si no, esperamos a que aparezca
+    const btn = findBtn();
+    if (btn) {
+      btn.addEventListener('click', handler, { capture: true });
+    } else {
+      const mo = new MutationObserver(() => {
+        const b = findBtn();
+        if (b) {
+          b.addEventListener('click', handler, { capture: true });
+          mo.disconnect();
+        }
+      });
+      mo.observe(document.body, { childList: true, subtree: true });
+    }
+  }
+
+  // ✅ Llama también a esta función al cargar
+  window.addEventListener('load', () => {
+    setTimeout(showChatNudge, 1200);
+    attachHideOnChatButton();
+  });
+</script>
+
 </script>
 
 
