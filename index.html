@@ -5,7 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Empresarial - Acceso a Aplicativos</title>
     <link rel="icon" href="./logos/448 (1).png" type="image/x-icon">
-   
+
+    <!-- inicio estilos import n8n -->
+ 
+
+<div id="n8n-chat"></div>
+
+
+  <script type="module">
+  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+  createChat({
+    webhookUrl: 'https://022e23bf0612.ngrok-free.app/webhook/e56b2c0f-10f3-4e57-8925-4194b23b7654/chat',
+    mode: 'window',
+    defaultLanguage: 'es',
+    showWelcomeScreen: false,
+    i18n: {
+      es: {
+        title: '¡Hola! 👋',
+        subtitle: 'Soy OSHI tu asistente IA de OSH Hotels. Estoy aquí para ayudarte.',
+        footer: 'Atención 24/7 · Respuesta inmediata',
+        getStarted: 'Nueva conversación',
+        inputPlaceholder: 'Escribe tu mensaje…',
+      },
+    },
+    initialMessages: [
+      '¡Hola! Todavía estoy en etapa de prueba, puedo hablar sobre algunos temas en general',
+      'Pruebame y preguntame sobre lo que necesites'
+    ],
+    // resto de tus opciones...
+  });
+</script>
+
+
+    <!-- Aqui termina n8n -->
+
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .card-hover {
@@ -253,6 +287,12 @@
             background: #f9fafb;
         }
     </style>
+     <!-- Base del widget -->
+<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+
+<!-- Tu hoja de estilos local con el branding -->
+<link href="./n8n-chat-brand.css" rel="stylesheet" />
+
 </head>
 
 <body class="min-h-screen bg-gradient-custom">
@@ -586,15 +626,6 @@
                 tipoLogo: "imagen",
                 categorias: ["comercial"]
             },
-            {
-                nombre: "Reporte de Guardia",
-                descripcion: "",
-                url: "https://formulario-reporte-d-yi8p.bolt.host/",
-                logo: "logos/ChatGPT Image 21 ago 2025, 11_49_12 a.m..png",
-                tipoLogo: "imagen",
-                categorias: ["Operaciones"]
-            },
-
             // OneDrive (solo tecnología)
             {
                 nombre: "OneDrive",
@@ -863,7 +894,4 @@
         });
     </script>
 </body>
-
 </html>
-
-
