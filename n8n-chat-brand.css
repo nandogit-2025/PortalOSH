@@ -1,0 +1,166 @@
+/* n8n-chat-brand.css */
+
+/* Tipografía corporativa opcional */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+:root {
+  /* COLORES BASE */
+  --chat--color-primary: #00B894;               /* acento principal */
+  --chat--color-primary-shade-50: #00A684;
+  --chat--color-primary-shade-100: #009973;
+
+  --chat--color-secondary: #0B5FFF;             /* opcional: acento alterno */
+  --chat--color-white: #ffffff;
+  --chat--color-light: #F6F8FC;                 /* fondo ventana */
+  --chat--color-light-shade-50: #E8EDF6;
+  --chat--color-light-shade-100: #C8D1E3;
+  --chat--color-medium: #CBD5E1;
+  --chat--color-dark: #0F172A;
+  --chat--color-disabled: #9AA0AE;
+
+  /* VENTANA */
+  --chat--window--width: 480px;
+  --chat--window--height: 640px;
+  --chat--border-radius: 18px;
+  --chat--spacing: 1rem;
+  --chat--transition-duration: .25s;
+
+  /* HEADER */
+  --chat--header--background: #0F172A;          /* slate-900 */
+  --chat--header--color: #E2E8F0;               /* slate-200 */
+  --chat--header--padding: 1.1rem;
+  --chat--heading--font-size: 1.1rem;
+  --chat--subtitle--font-size: .95rem;
+
+  /* MENSAJES */
+  --chat--message--font-size: .95rem;
+  --chat--message--padding: .75rem .95rem;
+  --chat--message--border-radius: 16px;
+  --chat--message-line-height: 1.6;
+  --chat--message--bot--background: #ffffff;    /* burbuja bot */
+  --chat--message--bot--color: #0F172A;
+  --chat--message--user--background: #00B894;   /* burbuja usuario */
+  --chat--message--user--color: #ffffff;
+  --chat--message--pre--background: rgba(15,23,42,.06);
+
+  /* INPUT */
+  --chat--textarea--height: 58px;
+
+  /* BOTÓN FLOTANTE (abrir/cerrar) */
+  --chat--toggle--size: 64px;
+  --chat--toggle--background: var(--chat--color-primary);
+  --chat--toggle--hover--background: var(--chat--color-primary-shade-50);
+  --chat--toggle--active--background: var(--chat--color-primary-shade-100);
+  --chat--toggle--color: #ffffff;
+}
+
+/* Fuente del widget */
+#n8n-chat, body {
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* Sombra y borde modernos de la ventana */
+body [role="dialog"], 
+body .chat-window {
+  box-shadow: 0 20px 60px rgba(2,8,23,.22);
+  border: 1px solid rgba(148,163,184,.25);
+}
+
+/* (Opcional) Modo oscuro amigable del widget si el SO está en dark */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --chat--color-light: #0B1220;
+    --chat--color-light-shade-50: #151E33;
+    --chat--color-dark: #E6EAF4;
+    --chat--message--bot--background: #0F172A;
+    --chat--message--bot--color: #E6EAF4;
+  }
+}
+/* ====== THEME OSH ====== */
+/* Encabezado en azul OSH */
+:root {
+  --chat--header--background: #3076D2;  /* Azul OSH */
+  --chat--header--color: #FFFFFF;
+
+  /* Ventana */
+  --chat--window--width: 480px;
+  --chat--window--height: 640px;
+  --chat--border-radius: 18px;
+  --chat--color-light: #F6F8FC;
+  --chat--color-dark: #0F172A;
+
+  /* Burbujas */
+  --chat--message--bot--background: #FFFFFF;
+  --chat--message--bot--color: #0F172A;
+  --chat--message--user--background: #3076D2;  /* que el usuario también vaya en azul */
+  --chat--message--user--color: #FFFFFF;
+
+  /* Input */
+  --chat--textarea--height: 58px;
+}
+
+/* ====== BOTÓN FLOTANTE: elige versión ====== */
+
+/* (A) Botón azul OSH */
+:root {
+  --chat--toggle--background: #3076D2;
+  --chat--toggle--hover--background: #2A68B9;   /* ~10–15% más oscuro */
+  --chat--toggle--active--background: #245AA0;
+  --chat--toggle--color: #FFFFFF;
+  --chat--toggle--size: 64px;
+}
+
+/* (B) Si lo prefieres verde OSH, comenta el bloque (A) y usa este:
+:root {
+  --chat--toggle--background: #5E8C5B;
+  --chat--toggle--hover--background: #537B51;
+  --chat--toggle--active--background: #476A46;
+  --chat--toggle--color: #FFFFFF;
+  --chat--toggle--size: 64px;
+}
+*/
+
+/* Sombra/contorno de la ventana */
+body [role="dialog"], body .chat-window {
+  box-shadow: 0 20px 60px rgba(2,8,23,.22);
+  border: 1px solid rgba(148,163,184,.18);
+}
+/* ====== NUDGE DEL CHAT ====== */
+#chat-nudge {
+  position: fixed;
+  right: 96px;
+  bottom: 23px;
+  background: var(--chat--header--background, #3076D2);
+  color: var(--chat--header--color, #fff);
+  padding: .6rem .8rem;
+  border-radius: 14px;
+  font-size: .95rem;
+  line-height: 1.4;
+  box-shadow: 0 18px 50px rgba(2,8,23,.22);
+  border: 1px solid rgba(148,163,184,.25);
+  z-index: 2147483600;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: chat-nudge-in .35s ease forwards;
+  cursor: pointer;
+}
+#chat-nudge::after {
+  content: "";
+  position: absolute;
+  right: -8px; bottom: 18px;
+  border-width: 8px 0 8px 8px;
+  border-style: solid;
+  border-color: transparent transparent transparent var(--chat--header--background, #3076D2);
+}
+#chat-nudge.hide { animation: chat-nudge-out .25s ease forwards; }
+@keyframes chat-nudge-in { to { opacity: 1; transform: translateY(0); } }
+@keyframes chat-nudge-out { to { opacity: 0; transform: translateY(8px); } }
+
+@media (max-width: 640px){
+  #chat-nudge{ right:24px; bottom:120px; }
+  #chat-nudge::after{
+    right:22px; bottom:-8px; transform:rotate(90deg);
+    border-width:8px 8px 0 8px;
+    border-color: var(--chat--header--background, #3076D2) transparent transparent transparent;
+  }
+}
