@@ -7,112 +7,45 @@
     <link rel="icon" href="./logos/448 (1).png" type="image/x-icon">
 
     <!-- inicio estilos import n8n -->
- 
-
-<div id="n8n-chat"></div>
-
-
-  <script type="module">
+ <!-- inicio estilos import n8n -->
+<script type="module">
   import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
-  createChat({
-    webhookUrl: 'https://n8n-tunel.oshpitalitygroup.com/webhook/a2fc81e1-9461-4eff-829d-077ce01cf806/chat',
-    mode: 'window',
-    defaultLanguage: 'es',
-    showWelcomeScreen: false,
-    i18n: {
-      es: {
-        title: '¡Hola! 👋',
-        subtitle: 'Soy OSHI tu asistente IA de OSH. Estoy aquí para ayudarte.',
-        footer: 'Chat en mantenimiento, disculpa los inconvenientes',
-        getStarted: 'Nueva conversación',
-        inputPlaceholder: 'Escribe tu mensaje…',
-      },
-    },
-    initialMessages: [
-      '¡Hola! Todavía estoy en etapa de prueba, puedo hablar sobre algunos temas en general',
-      'Pruebame y preguntame sobre lo que necesites'
-    ],
-    // resto de tus opciones...
-  });
-  
-  // ...tu createChat(...) aquí arriba
-
-  // Limpia la marca de "ya mostrado" para que puedas probar cada recarga:
-  // (borra esta línea cuando lo dejes en producción)
-  sessionStorage.removeItem('n8n_nudge_shown');
-
-  function showChatNudge(text='¿Necesitas ayuda? ¡Chatea conmigo! 💬') {
-    if (sessionStorage.getItem('n8n_nudge_shown')) return;
-
-    const el = document.createElement('div');
-    el.id = 'chat-nudge';
-    el.textContent = text;
-
-    el.addEventListener('click', () => {
-      dismissNudge(el);
-      // Intento robusto de abrir el chat: busca un botón fijo cerca de la esquina
-      const cand = [...document.querySelectorAll('button, div, a')].find(n => {
-        const s = getComputedStyle(n); const r = n.getBoundingClientRect();
-        const sizeOK = Math.abs(r.width - r.height) < 12 && r.width >= 48 && r.width <= 88;
-        const fixed = s.position === 'fixed';
-        const corner = r.right > innerWidth - 160 && r.bottom > innerHeight - 160;
-        return fixed && corner && sizeOK;
-      });
-      if (cand) cand.dispatchEvent(new MouseEvent('click', { bubbles:true }));
-    });
-
-    document.body.appendChild(el);
-    sessionStorage.setItem('n8n_nudge_shown', '1');
-    setTimeout(() => dismissNudge(el), 7000);
-  }
-
-  function dismissNudge(el){ if(!el) return; el.classList.add('hide'); setTimeout(() => el.remove(), 280); }
-
-  // Muestra el nudge 1.2s después de que cargue la página
-  window.addEventListener('load', () => setTimeout(showChatNudge, 1200));
-
-    function attachHideOnChatButton() {
-    const findBtn = () => {
-      return [...document.querySelectorAll('button, div, a')].find(n => {
-        const s = getComputedStyle(n);
-        const r = n.getBoundingClientRect();
-        const sizeOK = Math.abs(r.width - r.height) < 12 && r.width >= 48 && r.width <= 88;
-        const fixed  = s.position === 'fixed';
-        const corner = r.right > innerWidth - 160 && r.bottom > innerHeight - 160;
-        return fixed && corner && sizeOK;
-      });
-    };
-
-    const handler = () => {
-      const n = document.getElementById('chat-nudge');
-      if (n) dismissNudge(n);
-    };
-
-    // Si ya existe el botón, enganchamos; si no, esperamos a que aparezca
-    const btn = findBtn();
-    if (btn) {
-      btn.addEventListener('click', handler, { capture: true });
-    } else {
-      const mo = new MutationObserver(() => {
-        const b = findBtn();
-        if (b) {
-          b.addEventListener('click', handler, { capture: true });
-          mo.disconnect();
-        }
-      });
-      mo.observe(document.body, { childList: true, subtree: true });
+  window.addEventListener('DOMContentLoaded', () => {
+    // 👀 IMPORTANTE: este div debe existir en el HTML
+    const target = document.querySelector('#ai-chat-container');
+    if (!target) {
+      console.warn('No se encontró #ai-chat-container. Crea ese div donde quieras mostrar el chat embebido.');
+      return;
     }
-  }
 
-  // ✅ Llama también a esta función al cargar
-  window.addEventListener('load', () => {
-    setTimeout(showChatNudge, 1200);
-    attachHideOnChatButton();
+    createChat({
+      webhookUrl: 'https://n8n-tunel.oshpitalitygroup.com/webhook/a2fc81e1-9461-4eff-829d-077ce01cf806/chat',
+      mode: 'embedded',            // 👈 ya no "window"
+      target: '#ai-chat-container',
+      defaultLanguage: 'es',
+      showWelcomeScreen: true,
+      i18n: {
+        es: {
+          title: 'Asistente Corporativo OSH',
+          subtitle: 'Puedo ayudarte a analizar documentos o responder preguntas corporativas.',
+          footer: 'OSH Hotels AI puede cometer errores. Verifica la información importante.',
+          getStarted: 'Nueva conversación',
+          inputPlaceholder: 'Escribe tu mensaje o pregunta…',
+        },
+      },
+      initialMessages: [
+        '¡Hola! Soy OSHI, tu asistente de IA de OSH Hotels.',
+        'Puedo ayudarte a responder preguntas, analizar información o apoyarte con tus tareas diarias.'
+      ],
+    });
   });
 </script>
+<!-- Aqui termina n8n -->
 
-</script>
+
+
+
 
 
     <!-- Aqui termina n8n -->
@@ -429,6 +362,18 @@
                 <span>Tecnología</span>
                 <span class="ml-auto bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs" id="count-tecnologia">0</span>
             </div>
+                        <div class="sidebar-item" onclick="filterByArea('tecnologia')" data-category="tecnologia">
+                <span class="mr-3">💻</span>
+                <span>Tecnología</span>
+                <span class="ml-auto bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs" id="count-tecnologia">0</span>
+            </div>
+
+            <!-- NUEVO: Entorno IA -->
+            <div class="sidebar-item" onclick="filterByArea('ia')" data-category="ia">
+                <span class="mr-3">🤖</span>
+                <span>Entorno IA</span>
+            </div>
+
         </nav>
     </div>
 
@@ -461,28 +406,63 @@
         </header>
 
         <!-- Main Content -->
-        <main class="px-6 py-8">
-            <!-- Search bar -->
-            <div class="mb-8">
-                <div class="relative max-w-md">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
+                <main class="px-6 py-8">
+            <!-- ====== CONTENIDO NORMAL DEL PORTAL ====== -->
+            <div id="portal-main">
+                <!-- Search bar -->
+                <div class="mb-8">
+                    <div class="relative max-w-md">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <input type="text" placeholder="Buscar Aplicación..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <input type="text" placeholder="Buscar Aplicación..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500">                </div>
-            </div>
-            
-            <!-- Updated grid layout for integrations -->
-            <div class="apps-grid fade-in" id="aplicativos-grid">
-                <!-- Los aplicativos se generarán dinámicamente con JavaScript -->
+                </div>
+                
+                <!-- Grid de aplicativos -->
+                <div class="apps-grid fade-in" id="aplicativos-grid"></div>
+
+                <!-- Mesas de Ayuda Grid -->
+                <div class="apps-grid fade-in" id="mesas-ayuda-grid"></div>
             </div>
 
-            <!-- Mesas de Ayuda Grid -->
-            <div class="apps-grid fade-in" id="mesas-ayuda-grid">
-                <!-- Las mesas de ayuda se generarán dinámicamente con JavaScript -->
+            <!-- ====== ENTORNO IA ====== -->
+            <div id="ia-hub" class="hidden">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900">Entorno de Inteligencia Artificial</h2>
+                    <p class="text-sm text-gray-600">Potenciado por Google Gemini 2.5 Flash</p>
+                </div>
+
+                <!-- Tabs -->
+                <div class="flex gap-2 mb-4">
+                    <button
+                        id="ia-tab-chat"
+                        class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium">
+                        Chat &amp; Análisis
+                    </button>
+                    <button
+                        id="ia-tab-images"
+                        class="px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm font-medium">
+                        Crear Imágenes
+                    </button>
+                </div>
+
+                <!-- Sección Chat -->
+                <div id="ia-chat-section" class="border rounded-xl bg-white" style="height:540px;">
+                    <div id="ai-chat-container" style="height:100%;"></div>
+                </div>
+
+                <!-- Sección Imágenes (placeholder por ahora) -->
+                <div id="ia-images-section" class="border rounded-xl bg-white hidden" style="height:540px;">
+                    <div class="h-full flex items-center justify-center text-sm text-gray-500 px-4 text-center">
+                        Aquí podrás conectar tu flujo de generación de imágenes de n8n (Gemini / Imagen).
+                    </div>
+                </div>
             </div>
         </main>
+
     </div>
 
     <script>
@@ -904,10 +884,25 @@
         }
 
         // Función para filtrar por área
-        function filterByArea(area) {
+                function filterByArea(area) {
             currentFilter = area;
-            generarAplicativos(area);
-            generarMesasAyuda(area);
+
+            const portalMain = document.getElementById('portal-main');
+            const iaHub = document.getElementById('ia-hub');
+
+            if (area === 'ia') {
+                // Mostrar Entorno IA, ocultar grid de aplicativos
+                if (portalMain) portalMain.classList.add('hidden');
+                if (iaHub) iaHub.classList.remove('hidden');
+            } else {
+                // Mostrar portal normal, ocultar Entorno IA
+                if (portalMain) portalMain.classList.remove('hidden');
+                if (iaHub) iaHub.classList.add('hidden');
+
+                // Sólo generamos grids cuando no estamos en IA
+                generarAplicativos(area);
+                generarMesasAyuda(area);
+            }
             
             // Actualizar UI de las categorías del sidebar
             const categories = document.querySelectorAll('.sidebar-item');
@@ -920,6 +915,7 @@
                 }
             });
         }
+
 
         // Función para toggle del sidebar móvil
         function toggleMobileSidebar() {
@@ -999,20 +995,37 @@
                     });
                 });
             }
+                        // ====== Tabs del Entorno IA ======
+            const tabChat = document.getElementById('ia-tab-chat');
+            const tabImages = document.getElementById('ia-tab-images');
+            const chatSection = document.getElementById('ia-chat-section');
+            const imagesSection = document.getElementById('ia-images-section');
+
+            if (tabChat && tabImages && chatSection && imagesSection) {
+                tabChat.addEventListener('click', () => {
+                    tabChat.classList.add('bg-blue-600', 'text-white');
+                    tabChat.classList.remove('bg-gray-100', 'text-gray-700');
+
+                    tabImages.classList.remove('bg-blue-600', 'text-white');
+                    tabImages.classList.add('bg-gray-100', 'text-gray-700');
+
+                    chatSection.classList.remove('hidden');
+                    imagesSection.classList.add('hidden');
+                });
+
+                tabImages.addEventListener('click', () => {
+                    tabImages.classList.add('bg-blue-600', 'text-white');
+                    tabImages.classList.remove('bg-gray-100', 'text-gray-700');
+
+                    tabChat.classList.remove('bg-blue-600', 'text-white');
+                    tabChat.classList.add('bg-gray-100', 'text-gray-700');
+
+                    imagesSection.classList.remove('hidden');
+                    chatSection.classList.add('hidden');
+                });
+            }
+
         });
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
