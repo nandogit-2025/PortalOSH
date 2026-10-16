@@ -130,6 +130,7 @@
 .oshi-chat__message--assistant { align-self: flex-start; border-bottom-left-radius: 4px; background: #fff; }
 .oshi-chat__message--user { align-self: flex-end; border-color: #2563eb; border-bottom-right-radius: 4px; color: #fff; background: #2563eb; }
 .oshi-chat__message--pending { color: #475569; font-style: italic; }
+.oshi-chat__elapsed, .oshi-chat__timing { display: block; margin-top: 8px; color: #64748b; font-size: 12px; font-style: normal; white-space: normal; }
 .oshi-chat__message--error { border-color: #fecaca; color: #991b1b; background: #fff7f7; }
 
 .oshi-chat__sources { display: grid; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #dbeafe; white-space: normal; }
