@@ -10,6 +10,8 @@
   const CHAT_URL = 'http://localhost:8099/chat';
   const REQUEST_TIMEOUT_MS = 180000;
   const ERROR_MESSAGE = 'No fue posible consultar OSHI en este momento. Intenta nuevamente.';
+  const WAIT_MESSAGE = 'Claro, dame un momento mientras reviso la documentación de OSH.';
+  const WAIT_LONG_MESSAGE = 'Sigo con tu consulta. Gracias por esperar.';
 
   root.innerHTML = `
     <button class="oshi-chat__nudge" type="button" hidden>
@@ -160,11 +162,30 @@
     const message = input.value.trim();
     if (!message || isSending) return;
 
+    const startedAt = performance.now();
+    let completed = false;
+    let responseId = null;
     addMessage('user', message);
     input.value = '';
     setBusy(true);
-    const pending = addMessage('assistant', 'Consultando documentación oficial...');
+    const pending = addMessage('assistant', '');
     pending.classList.add('oshi-chat__message--pending');
+    const pendingText = document.createElement('span');
+    pendingText.textContent = WAIT_MESSAGE;
+    const elapsed = document.createElement('span');
+    elapsed.className = 'oshi-chat__elapsed';
+    elapsed.setAttribute('aria-hidden', 'true');
+    pending.append(pendingText, elapsed);
+    const updateWait = () => {
+      const seconds = Math.floor((performance.now() - startedAt) / 1000);
+      elapsed.textContent = `Tiempo de espera: ${seconds} s`;
+      if (seconds >= 30 && pendingText.textContent !== WAIT_LONG_MESSAGE) {
+        pendingText.textContent = WAIT_LONG_MESSAGE;
+      }
+    };
+    updateWait();
+    scrollToLatest();
+    const waitTimer = window.setInterval(updateWait, 1000);
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
@@ -182,13 +203,28 @@
       }
       pending.textContent = data.answer;
       appendSources(pending, data);
+      completed = true;
+      if (typeof data.response_id === 'string') responseId = data.response_id;
     } catch (error) {
       console.error('[OSHI] Falló la consulta al backend local:', error);
       pending.textContent = ERROR_MESSAGE;
       pending.classList.add('oshi-chat__message--error');
     } finally {
       window.clearTimeout(timeout);
+      window.clearInterval(waitTimer);
       pending.classList.remove('oshi-chat__message--pending');
+      const durationMs = Math.round(performance.now() - startedAt);
+      pending.dataset.durationMs = String(durationMs);
+      const timing = document.createElement('span');
+      timing.className = 'oshi-chat__timing';
+      const seconds = (durationMs / 1000).toLocaleString('es-CO', {
+        minimumFractionDigits: 1, maximumFractionDigits: 1,
+      });
+      timing.textContent = `${completed ? 'Respuesta en' : 'Tiempo de espera:'} ${seconds} s`;
+      pending.appendChild(timing);
+      console.info('[OSHI] Consulta finalizada', {
+        duration_ms: durationMs, completed, response_id: responseId,
+      });
       setBusy(false);
       scrollToLatest();
       // No quitar el foco del buscador u otro control del Portal.

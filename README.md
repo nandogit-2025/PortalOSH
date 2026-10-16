@@ -62,3 +62,13 @@ Si el enlace no puede verificarse, se indica sin inventar una ruta.
 El POC resuelve fuentes mediante un catálogo de metadatos verificados del
 backend, actualizado el 16 de octubre de 2026. Debe refrescarse si se agregan
 o renombran archivos. El catálogo no se publica en este repositorio.
+
+## Espera y duración de consultas
+
+Al enviar aparece: Claro, dame un momento mientras reviso la documentación de OSH.
+El contador muestra el tiempo transcurrido. A partir de 30 segundos se muestra
+Sigo con tu consulta. Gracias por esperar. Al terminar aparece Respuesta en X s.
+El tiempo se mide en el navegador, desde el envío hasta recibir y preparar la
+respuesta, e incluye red y backend. En un error se muestra el tiempo de espera.
+Se registra duración, resultado e ID en la consola, sin pregunta ni respuesta.
+No se conserva historial de métricas después de recargar la página.
