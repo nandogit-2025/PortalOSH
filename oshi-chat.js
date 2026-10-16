@@ -6,8 +6,11 @@
   root.dataset.oshiInitialized = 'true';
   root.classList.add('oshi-chat');
 
-  // SOLO POC local: Azure y Foundry permanecen exclusivamente en el backend.
-  const CHAT_URL = 'http://localhost:8099/chat';
+  // En pruebas HTTP locales/LAN se consulta al equipo que sirve el Portal.
+  // file:// conserva localhost. Azure y Foundry permanecen en el backend.
+  const chatUrl = new URL('http://localhost:8099/chat');
+  if (window.location.protocol === 'http:') chatUrl.hostname = window.location.hostname;
+  const CHAT_URL = chatUrl.href;
   const REQUEST_TIMEOUT_MS = 180000;
   const ERROR_MESSAGE = 'No fue posible consultar OSHI en este momento. Intenta nuevamente.';
   const WAIT_MESSAGE = 'Claro, dame un momento mientras reviso la documentación de OSH.';
