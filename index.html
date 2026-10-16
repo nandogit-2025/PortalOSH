@@ -6,116 +6,7 @@
     <title>Portal Empresarial - Acceso a Aplicativos</title>
     <link rel="icon" href="./logos/448 (1).png" type="image/x-icon">
 
-    <!-- inicio estilos import n8n -->
- 
-
-<div id="n8n-chat"></div>
-
-
-  <script type="module">
-  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
-
-  createChat({
-    webhookUrl: 'https://n8n-tunel.oshpitalitygroup.com/webhook/a2fc81e1-9461-4eff-829d-077ce01cf806/chat',
-    mode: 'window',
-    defaultLanguage: 'es',
-    showWelcomeScreen: false,
-    i18n: {
-      es: {
-        title: '¡Hola! 👋',
-        subtitle: 'Soy OSHI tu asistente IA de OSH. Estoy aquí para ayudarte.',
-        footer: 'Chat en mantenimiento, disculpa los inconvenientes',
-        getStarted: 'Nueva conversación',
-        inputPlaceholder: 'Escribe tu mensaje…',
-      },
-    },
-    initialMessages: [
-      '¡Hola! Todavía estoy en etapa de prueba, puedo hablar sobre algunos temas en general',
-      'Pruebame y preguntame sobre lo que necesites'
-    ],
-    // resto de tus opciones...
-  });
-  
-  // ...tu createChat(...) aquí arriba
-
-  // Limpia la marca de "ya mostrado" para que puedas probar cada recarga:
-  // (borra esta línea cuando lo dejes en producción)
-  sessionStorage.removeItem('n8n_nudge_shown');
-
-  function showChatNudge(text='¿Necesitas ayuda? ¡Chatea conmigo! 💬') {
-    if (sessionStorage.getItem('n8n_nudge_shown')) return;
-
-    const el = document.createElement('div');
-    el.id = 'chat-nudge';
-    el.textContent = text;
-
-    el.addEventListener('click', () => {
-      dismissNudge(el);
-      // Intento robusto de abrir el chat: busca un botón fijo cerca de la esquina
-      const cand = [...document.querySelectorAll('button, div, a')].find(n => {
-        const s = getComputedStyle(n); const r = n.getBoundingClientRect();
-        const sizeOK = Math.abs(r.width - r.height) < 12 && r.width >= 48 && r.width <= 88;
-        const fixed = s.position === 'fixed';
-        const corner = r.right > innerWidth - 160 && r.bottom > innerHeight - 160;
-        return fixed && corner && sizeOK;
-      });
-      if (cand) cand.dispatchEvent(new MouseEvent('click', { bubbles:true }));
-    });
-
-    document.body.appendChild(el);
-    sessionStorage.setItem('n8n_nudge_shown', '1');
-    setTimeout(() => dismissNudge(el), 7000);
-  }
-
-  function dismissNudge(el){ if(!el) return; el.classList.add('hide'); setTimeout(() => el.remove(), 280); }
-
-  // Muestra el nudge 1.2s después de que cargue la página
-  window.addEventListener('load', () => setTimeout(showChatNudge, 1200));
-
-    function attachHideOnChatButton() {
-    const findBtn = () => {
-      return [...document.querySelectorAll('button, div, a')].find(n => {
-        const s = getComputedStyle(n);
-        const r = n.getBoundingClientRect();
-        const sizeOK = Math.abs(r.width - r.height) < 12 && r.width >= 48 && r.width <= 88;
-        const fixed  = s.position === 'fixed';
-        const corner = r.right > innerWidth - 160 && r.bottom > innerHeight - 160;
-        return fixed && corner && sizeOK;
-      });
-    };
-
-    const handler = () => {
-      const n = document.getElementById('chat-nudge');
-      if (n) dismissNudge(n);
-    };
-
-    // Si ya existe el botón, enganchamos; si no, esperamos a que aparezca
-    const btn = findBtn();
-    if (btn) {
-      btn.addEventListener('click', handler, { capture: true });
-    } else {
-      const mo = new MutationObserver(() => {
-        const b = findBtn();
-        if (b) {
-          b.addEventListener('click', handler, { capture: true });
-          mo.disconnect();
-        }
-      });
-      mo.observe(document.body, { childList: true, subtree: true });
-    }
-  }
-
-  // ✅ Llama también a esta función al cargar
-  window.addEventListener('load', () => {
-    setTimeout(showChatNudge, 1200);
-    attachHideOnChatButton();
-  });
-</script>
-
-</script>
-
-
-    <!-- Aqui termina n8n -->
+    <!-- Chat OSHI: los recursos se cargan al final del documento. -->
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -364,11 +255,7 @@
             background: #f9fafb;
         }
     </style>
-     <!-- Base del widget -->
-<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
-
-<!-- Tu hoja de estilos local con el branding -->
-<link href="./n8n-chat-brand.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./oshi-chat.css">
 
 </head>
 
@@ -568,7 +455,7 @@
                 nombre: "Solicitudes de Compras 🛒",
                 descripcion: "Solicitudes de compras y suministros",
                 url: "https://purchase-request-web-0xul.bolt.host/",
-                logo: "logos/Logocompras.JPG",
+                logo: "logos/Logocompras.jpg",
                 tipoLogo: "imagen",
                 categorias: ["compras"],
                 esGlobal: true
@@ -652,7 +539,7 @@
                 nombre: "MySatcom",
                 descripcion: "Facturador electronico POS",
                 url: "https://colombia.mysatcomla.com/Ingreso/OSHG",
-                logo: "logos/satcom.JPG",
+                logo: "logos/satcom.jpg",
                 tipoLogo: "imagen",
                 categorias: ["contraloria", "alimentos", "tecnologia"]
             },
@@ -721,7 +608,7 @@
                 nombre: "Linkedin",
                 descripcion: "Red profesional para conectar talentos",
                 url: "https://www.linkedin.com/company/oshhotels/",
-                logo: "logos/linkedin.PNG",
+                logo: "logos/linkedin.png",
                 tipoLogo: "imagen",
                 categorias: ["recursos-humanos"]
             },
@@ -753,7 +640,7 @@
                 nombre: "ReviewPro",
                 descripcion: "",
                 url: "https://app.reviewpro.com/login",
-                logo: "logos/reviewpro.webp",
+                logo: "logos/reviewPro.webp",
                 tipoLogo: "imagen",
                 categorias: ["comercial"]
             },
@@ -1024,6 +911,8 @@
             }
         });
     </script>
+    <div id="oshi-chat-root"></div>
+    <script src="./oshi-chat.js"></script>
 </body>
 </html>
 
