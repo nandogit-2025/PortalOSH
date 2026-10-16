@@ -51,3 +51,14 @@ local de Azure CLI; todavía es un POC, sin autenticación de usuarios.
 Las credenciales y las llamadas a Foundry permanecen en el backend. No se
 incluyen en este repositorio. Esta integración se prueba en una rama aparte
 de `main` hasta que exista la dirección del backend publicado.
+
+## Documentos citados
+
+El chat muestra tarjetas con el nombre del archivo y **Abrir documento**.
+Se abre el archivo original en SharePoint con los permisos del usuario.
+El backend 0.2 devuelve sources; reiniciarlo para activar la nueva respuesta.
+Si el enlace no puede verificarse, se indica sin inventar una ruta.
+
+El POC resuelve fuentes mediante un catálogo de metadatos verificados del
+backend, actualizado el 16 de octubre de 2026. Debe refrescarse si se agregan
+o renombran archivos. El catálogo no se publica en este repositorio.
