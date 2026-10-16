@@ -132,6 +132,14 @@
 .oshi-chat__message--pending { color: #475569; font-style: italic; }
 .oshi-chat__message--error { border-color: #fecaca; color: #991b1b; background: #fff7f7; }
 
+.oshi-chat__sources { display: grid; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #dbeafe; white-space: normal; }
+.oshi-chat__source { display: block; padding: 10px 12px; border: 1px solid #bfdbfe; border-radius: 10px; color: #1e40af; background: #eff6ff; text-decoration: none; overflow-wrap: anywhere; }
+.oshi-chat__source:hover { background: #dbeafe; }
+.oshi-chat__source:focus-visible { outline: 3px solid #93c5fd; outline-offset: 3px; }
+.oshi-chat__source-title { display: block; font-size: 12px; line-height: 1.4; color: #334155; }
+.oshi-chat__source-action { display: block; margin-top: 5px; font-weight: 700; }
+.oshi-chat__source-note { margin: 12px 0 0; color: #64748b; font-size: 12px; white-space: normal; }
+
 .oshi-chat__composer {
   display: flex;
   flex-shrink: 0;

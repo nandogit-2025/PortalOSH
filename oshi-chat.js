@@ -61,13 +61,57 @@
   }
 
   function addMessage(role, text) {
-    const bubble = document.createElement('p');
+    const bubble = document.createElement('div');
     bubble.className = `oshi-chat__message oshi-chat__message--${role}`;
     // El contenido del usuario y del agente siempre se trata como texto.
     bubble.textContent = text;
     messages.appendChild(bubble);
     scrollToLatest();
     return bubble;
+  }
+
+  function appendSources(bubble, data) {
+    const list = document.createElement('div');
+    list.className = 'oshi-chat__sources';
+    const seen = new Set();
+    const sources = Array.isArray(data.sources) ? data.sources.slice(0, 8) : [];
+    for (const source of sources) {
+      if (!source || typeof source.url !== 'string' || typeof source.title !== 'string') continue;
+      let url;
+      try {
+        url = new URL(source.url);
+        if (url.protocol !== 'https:' || url.hostname !== 'oshgetsemani.sharepoint.com'
+          || url.port || url.username || url.password || url.hash
+          || !/\.(pdf|docx?|xlsx?|pptx?|csv)$/i.test(url.pathname)
+          || [...url.searchParams].some(([key, value]) => key !== 'web' || !['0', '1'].includes(value))) continue;
+      } catch {
+        continue;
+      }
+      const key = url.origin + url.pathname;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const link = document.createElement('a');
+      link.className = 'oshi-chat__source';
+      link.href = url.href;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.setAttribute('aria-label', `Abrir documento: ${source.title}`);
+      const title = document.createElement('span');
+      title.className = 'oshi-chat__source-title';
+      title.textContent = source.title;
+      const action = document.createElement('span');
+      action.className = 'oshi-chat__source-action';
+      action.textContent = 'Abrir documento ↗';
+      link.append(title, action);
+      list.appendChild(link);
+    }
+    if (list.children.length) bubble.appendChild(list);
+    if (data.sources_unavailable === true) {
+      const note = document.createElement('p');
+      note.className = 'oshi-chat__source-note';
+      note.textContent = 'No hay un enlace verificado disponible para alguno de los documentos citados.';
+      bubble.appendChild(note);
+    }
   }
 
   function dismissNudge() {
@@ -137,6 +181,7 @@
         throw new Error('OSHI no devolvió una respuesta de texto válida');
       }
       pending.textContent = data.answer;
+      appendSources(pending, data);
     } catch (error) {
       console.error('[OSHI] Falló la consulta al backend local:', error);
       pending.textContent = ERROR_MESSAGE;
