@@ -1,12 +1,13 @@
 # PortalOSH
 
 Portal de aplicaciones de OSH Hotels, con chat OSHI conectado al backend
-FastAPI de OSH Knowledge. Esta rama corresponde a la prueba local.
+FastAPI de OSH Knowledge. Incluye pruebas locales/LAN y configuración para HTTPS.
 
 ## Archivos del chat
 
 - `index.html`: conserva la navegación, aplicaciones, mesas de ayuda y buscador.
-- `oshi-chat.js`: widget que envía `POST http://localhost:8099/chat` con
+- `oshi-chat-config.js`: dirección HTTPS pública del backend, sin credenciales.
+- `oshi-chat.js`: widget que envía `POST` a la dirección configurada con
   `{"message":"..."}` y muestra el campo `answer`.
 - `oshi-chat.css`: estilos limitados al widget, incluida la vista móvil.
 - `logos/`: imágenes originales del portal; no se reemplazaron ni modificaron.
@@ -41,12 +42,36 @@ para cerrar. El portal sigue siendo utilizable mientras se consulta. Los
 mensajes se insertan como texto y el historial solo dura mientras está abierta
 la página. Los fallos muestran un mensaje simple y permiten volver a intentar.
 
-## Antes de publicar el chat para otros usuarios
+## Configurar el chat de Netlify
 
-La URL actual `http://localhost:8099/chat`, definida en `oshi-chat.js`, es solo
-para esta prueba en el equipo local. Para el portal público hay que desplegar
-el backend con HTTPS y configurar esa URL. El backend actual usa la sesión
-local de Azure CLI; todavía es un POC, sin autenticación de usuarios.
+El sitio publicado es <https://portalosh.netlify.app/>. Su backend HTTPS todavía
+está pendiente de despliegue. Editar únicamente `chatUrl` en
+`oshi-chat-config.js` cuando exista la dirección real y completa de `/chat`.
+El archivo se carga antes del widget desde `index.html`.
+
+```javascript
+window.OSHI_CONFIG = Object.freeze({
+  chatUrl: '', // Sustituir por la URL HTTPS real del backend terminada en /chat.
+});
+```
+
+Con `chatUrl` vacío, una página HTTPS muestra «OSHI no está disponible en este
+momento» y deshabilita el envío. No consulta localhost ni una IP privada desde
+Netlify. Las direcciones inválidas, HTTP o con credenciales/parámetros también
+deshabilitan el chat, sin intentar una ruta alternativa.
+
+Para activar el servicio publicado:
+
+1. Desplegar el backend con HTTPS, autenticación para los usuarios y acceso a Foundry.
+2. Permitir el origen `https://portalosh.netlify.app` en CORS del backend.
+3. Escribir su URL real en `oshi-chat-config.js`, guardar y subir el cambio.
+4. Llevar el cambio a la rama configurada para desplegar en Netlify y verificar
+   el nuevo despliegue con una consulta real desde otro PC.
+
+Publicar el frontend no inicia el backend de la carpeta `osh-knowledge`.
+Netlify tampoco puede alcanzar la IP privada de un PC mediante una ruta proxy.
+El backend local sigue usando la sesión Azure CLI del anfitrión, sin
+autenticación individual; su exposición actual está limitada a pruebas de LAN.
 
 Las credenciales y las llamadas a Foundry permanecen en el backend. No se
 incluyen en este repositorio. Esta integración se prueba en una rama aparte
@@ -75,7 +100,7 @@ No se conserva historial de métricas después de recargar la página.
 
 ## Pruebas desde otro PC de la LAN
 
-El widget calcula el servidor del chat usando el hostname de la página cuando
+Si `chatUrl` está vacío, el widget calcula el servidor usando el hostname cuando
 el Portal se abre por HTTP: `http://<HOST_DEL_PORTAL>:8099/chat`. Por ello, el
 otro PC debe abrir el Portal por la IP del equipo anfitrión, no por localhost.
 

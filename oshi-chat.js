@@ -6,11 +6,29 @@
   root.dataset.oshiInitialized = 'true';
   root.classList.add('oshi-chat');
 
-  // En pruebas HTTP locales/LAN se consulta al equipo que sirve el Portal.
-  // file:// conserva localhost. Azure y Foundry permanecen en el backend.
-  const chatUrl = new URL('http://localhost:8099/chat');
-  if (window.location.protocol === 'http:') chatUrl.hostname = window.location.hostname;
-  const CHAT_URL = chatUrl.href;
+  function resolveChatUrl() {
+    const configured = window.OSHI_CONFIG?.chatUrl;
+    if (typeof configured === 'string' && configured.trim()) {
+      try {
+        const url = new URL(configured.trim());
+        // La configuración publicada requiere HTTPS y no transporta credenciales.
+        if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash
+          || url.hostname === 'localhost' || url.hostname.endsWith('.localhost')
+          || url.hostname.startsWith('127.') || url.hostname === '[::1]') return null;
+        return url.href;
+      } catch {
+        return null;
+      }
+    }
+    // Solo las pruebas HTTP locales/LAN y file:// conservan el backend del PC.
+    if (window.location.protocol === 'file:') return 'http://localhost:8099/chat';
+    if (window.location.protocol !== 'http:') return null;
+    const url = new URL('http://localhost:8099/chat');
+    url.hostname = window.location.hostname;
+    return url.href;
+  }
+
+  const CHAT_URL = resolveChatUrl();
   const REQUEST_TIMEOUT_MS = 180000;
   const ERROR_MESSAGE = 'No fue posible consultar OSHI en este momento. Intenta nuevamente.';
   const WAIT_MESSAGE = 'Claro, dame un momento mientras reviso la documentación de OSH.';
@@ -139,8 +157,8 @@
 
   function setBusy(busy) {
     isSending = busy;
-    input.disabled = busy;
-    sendButton.disabled = busy;
+    input.disabled = busy || !CHAT_URL;
+    sendButton.disabled = busy || !CHAT_URL;
     messages.setAttribute('aria-busy', String(busy));
   }
 
@@ -163,7 +181,7 @@
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const message = input.value.trim();
-    if (!message || isSending) return;
+    if (!message || isSending || !CHAT_URL) return;
 
     const startedAt = performance.now();
     let completed = false;
@@ -209,7 +227,7 @@
       completed = true;
       if (typeof data.response_id === 'string') responseId = data.response_id;
     } catch (error) {
-      console.error('[OSHI] Falló la consulta al backend local:', error);
+      console.error('[OSHI] Falló la consulta al backend:', error);
       pending.textContent = ERROR_MESSAGE;
       pending.classList.add('oshi-chat__message--error');
     } finally {
@@ -237,8 +255,14 @@
     }
   });
 
-  addMessage('assistant', '¡Hola! Puedo ayudarte a consultar procedimientos y documentación oficial de OSH.');
-  addMessage('assistant', 'Pregúntame lo que necesites.');
+  if (CHAT_URL) {
+    addMessage('assistant', '¡Hola! Puedo ayudarte a consultar procedimientos y documentación oficial de OSH.');
+    addMessage('assistant', 'Pregúntame lo que necesites.');
+  } else {
+    addMessage('assistant', 'OSHI no está disponible en este momento.');
+    input.placeholder = 'Chat no disponible';
+  }
+  setBusy(false);
   window.setTimeout(() => {
     if (!nudgeDismissed && panel.hidden) {
       nudge.hidden = false;
