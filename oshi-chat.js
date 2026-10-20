@@ -6,7 +6,15 @@
   root.dataset.oshiInitialized = 'true';
   root.classList.add('oshi-chat');
 
+  const useLocalBackend = window.OSHI_CONFIG?.useLocalBackendOnHttp === true
+    && ['http:', 'file:'].includes(window.location.protocol);
+
   function resolveChatUrl() {
+    if (useLocalBackend) {
+      const url = new URL('http://localhost:8099/chat');
+      if (window.location.protocol === 'http:') url.hostname = window.location.hostname;
+      return url.href;
+    }
     const configured = window.OSHI_CONFIG?.chatUrl;
     if (typeof configured === 'string' && configured.trim()) {
       try {
@@ -29,6 +37,7 @@
   }
 
   const CHAT_URL = resolveChatUrl();
+  const requiresAccessCode = window.OSHI_CONFIG?.requiresAccessCode === true && !useLocalBackend;
   const REQUEST_TIMEOUT_MS = 180000;
   const ERROR_MESSAGE = 'No fue posible consultar OSHI en este momento. Intenta nuevamente.';
   const WAIT_MESSAGE = 'Claro, dame un momento mientras reviso la documentación de OSH.';
@@ -49,6 +58,15 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
         </button>
       </header>
+      <form class="oshi-chat__access" hidden>
+        <label for="oshi-access-code">Código de prueba</label>
+        <div class="oshi-chat__access-row">
+          <input id="oshi-access-code" type="password" autocomplete="off" required
+            placeholder="Introduce tu código" aria-describedby="oshi-access-status">
+          <button type="submit">Conectar</button>
+        </div>
+        <p id="oshi-access-status" role="status">Solicita el código al responsable de la prueba.</p>
+      </form>
       <div class="oshi-chat__messages" role="log" aria-live="polite"
         aria-relevant="additions text" aria-label="Mensajes con OSHI"></div>
       <form class="oshi-chat__composer">
@@ -76,6 +94,11 @@
   const form = root.querySelector('.oshi-chat__composer');
   const input = root.querySelector('#oshi-chat-input');
   const sendButton = root.querySelector('.oshi-chat__send');
+  const accessForm = root.querySelector('.oshi-chat__access');
+  const accessInput = root.querySelector('#oshi-access-code');
+  const accessButton = accessForm.querySelector('button');
+  const accessStatus = root.querySelector('#oshi-access-status');
+  let accessCode = '';
   let isSending = false;
   let nudgeDismissed = false;
 
@@ -149,7 +172,8 @@
     dismissNudge();
     if (open) {
       scrollToLatest();
-      if (!isSending) input.focus({ preventScroll: true });
+      if (requiresAccessCode && !accessCode && CHAT_URL) accessInput.focus({ preventScroll: true });
+      else if (!isSending) input.focus({ preventScroll: true });
     } else {
       launcher.focus({ preventScroll: true });
     }
@@ -157,10 +181,49 @@
 
   function setBusy(busy) {
     isSending = busy;
-    input.disabled = busy || !CHAT_URL;
-    sendButton.disabled = busy || !CHAT_URL;
+    const locked = requiresAccessCode && !accessCode;
+    input.disabled = busy || !CHAT_URL || locked;
+    sendButton.disabled = busy || !CHAT_URL || locked;
     messages.setAttribute('aria-busy', String(busy));
   }
+
+  accessForm.hidden = !CHAT_URL || !requiresAccessCode;
+  accessForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const candidate = accessInput.value.trim();
+    if (!candidate || !CHAT_URL || accessButton.disabled) return;
+    accessInput.disabled = true;
+    accessButton.disabled = true;
+    accessStatus.textContent = 'Comprobando acceso…';
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 15000);
+    try {
+      const response = await fetch(new URL('./session', CHAT_URL).href, {
+        headers: {'X-OSHI-Access-Code': candidate}, signal: controller.signal,
+        credentials: 'omit', cache: 'no-store',
+      });
+      if (response.status === 401) {
+        accessStatus.textContent = 'Código incorrecto. Verifica el código e inténtalo otra vez.';
+      } else if (response.status === 403) {
+        accessStatus.textContent = 'Esta red no está habilitada para la prueba.';
+      } else if (!response.ok) {
+        accessStatus.textContent = 'No fue posible conectar. Inténtalo de nuevo.';
+      } else {
+        accessCode = candidate;
+        accessForm.hidden = true;
+        input.placeholder = 'Escribe tu mensaje...';
+        setBusy(false);
+        input.focus({preventScroll:true});
+      }
+    } catch {
+      accessStatus.textContent = 'No fue posible conectar. Inténtalo de nuevo.';
+    } finally {
+      window.clearTimeout(timeout);
+      accessInput.value = '';
+      accessInput.disabled = false;
+      accessButton.disabled = false;
+    }
+  });
 
   launcher.addEventListener('click', () => setOpen(panel.hidden));
   nudge.addEventListener('click', () => setOpen(true));
@@ -181,7 +244,7 @@
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     const message = input.value.trim();
-    if (!message || isSending || !CHAT_URL) return;
+    if (!message || isSending || !CHAT_URL || (requiresAccessCode && !accessCode)) return;
 
     const startedAt = performance.now();
     let completed = false;
@@ -213,10 +276,18 @@
     try {
       const response = await fetch(CHAT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        headers: { 'Content-Type': 'application/json; charset=utf-8',
+          ...(requiresAccessCode ? {'X-OSHI-Access-Code': accessCode} : {}),
+        },
+        credentials: 'omit',
         body: JSON.stringify({ message }),
         signal: controller.signal,
       });
+      if (response.status === 401 && requiresAccessCode) {
+        accessCode = '';
+        accessForm.hidden = false;
+        accessStatus.textContent = 'El código ya no es válido. Introduce el código vigente.';
+      }
       if (!response.ok) throw new Error(`OSHI devolvió HTTP ${response.status}`);
       const data = await response.json();
       if (typeof data.answer !== 'string' || !data.answer.trim()) {
@@ -258,6 +329,7 @@
   if (CHAT_URL) {
     addMessage('assistant', '¡Hola! Puedo ayudarte a consultar procedimientos y documentación oficial de OSH.');
     addMessage('assistant', 'Pregúntame lo que necesites.');
+    if (requiresAccessCode) input.placeholder = 'Introduce el código para empezar';
   } else {
     addMessage('assistant', 'OSHI no está disponible en este momento.');
     input.placeholder = 'Chat no disponible';

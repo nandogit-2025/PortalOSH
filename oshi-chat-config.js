@@ -1,7 +1,9 @@
 // Configuración pública del Portal: escribir aquí la URL HTTPS completa de /chat.
 // Ejemplo de formato: https://backend.example.com/chat (no es una URL operativa).
 // No colocar claves, tokens, contraseñas ni credenciales en este archivo.
-// Vacío: chat deshabilitado en HTTPS; las pruebas HTTP locales/LAN siguen activas.
+// Túnel temporal de pruebas: requiere el código privado proporcionado por el anfitrión.
 window.OSHI_CONFIG = Object.freeze({
-  chatUrl: '',
+  chatUrl: 'https://enquiries-draw-mask-units.trycloudflare.com/chat',
+  requiresAccessCode: true,
+  useLocalBackendOnHttp: true,
 });

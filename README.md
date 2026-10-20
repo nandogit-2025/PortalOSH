@@ -42,16 +42,37 @@ para cerrar. El portal sigue siendo utilizable mientras se consulta. Los
 mensajes se insertan como texto y el historial solo dura mientras está abierta
 la página. Los fallos muestran un mensaje simple y permiten volver a intentar.
 
-## Configurar el chat de Netlify
+## Prueba desde el Portal desplegado — 20 de octubre de 2026
 
-El sitio publicado es <https://portalosh.netlify.app/>. Su backend HTTPS todavía
-está pendiente de despliegue. Editar únicamente `chatUrl` en
+El chat de <https://portalosh.netlify.app/> tiene configurado un túnel HTTPS
+temporal hacia el backend del anfitrión. Para conectar, abrir OSHI e introducir
+el **código de prueba** que entrega el responsable. Se valida antes de habilitar
+el envío y solo se conserva en memoria mientras la página esté abierta.
+No se guarda en Git, en la URL ni en el almacenamiento del navegador.
+
+La pasarela exige el código y filtra la IP de salida de la oficina. Permite
+únicamente el origen del Portal. Las credenciales de Azure permanecen en el
+backend; no son el código de prueba ni se entregan a los usuarios.
+
+El PC anfitrión, el backend, la pasarela y el túnel deben permanecer encendidos.
+La dirección cambia al crear un túnel nuevo: actualizar `chatUrl` y volver a
+publicar. Es una prueba temporal; el acceso estable y la identidad por usuario
+siguen pendientes. Desde otras redes se requiere habilitación explícita.
+
+Con `useLocalBackendOnHttp: true`, las páginas HTTP locales/LAN conservan
+el backend del hostname del Portal en el puerto 8099, sin pasar por el túnel.
+
+## Configurar el backend HTTPS
+
+El sitio publicado es <https://portalosh.netlify.app/>. Editar `chatUrl` en
 `oshi-chat-config.js` cuando exista la dirección real y completa de `/chat`.
 El archivo se carga antes del widget desde `index.html`.
 
 ```javascript
 window.OSHI_CONFIG = Object.freeze({
   chatUrl: '', // Sustituir por la URL HTTPS real del backend terminada en /chat.
+  requiresAccessCode: true, // Para la pasarela de pruebas con código.
+  useLocalBackendOnHttp: true,
 });
 ```
 
@@ -71,7 +92,8 @@ Para activar el servicio publicado:
 Publicar el frontend no inicia el backend de la carpeta `osh-knowledge`.
 Netlify tampoco puede alcanzar la IP privada de un PC mediante una ruta proxy.
 El backend local sigue usando la sesión Azure CLI del anfitrión, sin
-autenticación individual; su exposición actual está limitada a pruebas de LAN.
+autenticación individual. El túnel apunta a una pasarela protegida, no al puerto
+8099 directamente. El código es una protección temporal para los probadores.
 
 Las credenciales y las llamadas a Foundry permanecen en el backend. No se
 incluyen en este repositorio. Esta integración se prueba en una rama aparte

@@ -12,10 +12,10 @@
 
 .oshi-chat, .oshi-chat * { box-sizing: border-box; }
 .oshi-chat [hidden] { display: none !important; }
-.oshi-chat button, .oshi-chat textarea { font: inherit; }
+.oshi-chat button, .oshi-chat textarea, .oshi-chat input { font: inherit; }
 .oshi-chat button { cursor: pointer; }
 .oshi-chat button:disabled { cursor: wait; opacity: .6; }
-.oshi-chat button:focus-visible, .oshi-chat textarea:focus-visible {
+.oshi-chat button:focus-visible, .oshi-chat textarea:focus-visible, .oshi-chat input:focus-visible {
   outline: 3px solid #93c5fd;
   outline-offset: 3px;
 }
@@ -88,6 +88,12 @@
   background: linear-gradient(135deg, #1d4ed8, #2563eb);
 }
 .oshi-chat__header h2 { margin: 0 0 6px; color: inherit; font-size: 24px; font-weight: 700; line-height: 1.25; }
+.oshi-chat__access { flex-shrink: 0; padding: 12px 16px; border-bottom: 1px solid #dbeafe; background: #f8fafc; }
+.oshi-chat__access label { display: block; margin-bottom: 6px; font-weight: 600; }
+.oshi-chat__access-row { display: flex; gap: 8px; }
+.oshi-chat__access input { flex: 1; min-width: 0; width: 100%; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px; }
+.oshi-chat__access button { border: 0; border-radius: 8px; padding: 8px 12px; color: #fff; background: #2563eb; }
+.oshi-chat__access p { margin: 6px 0 0; color: #475569; font-size: 12px; }
 .oshi-chat__header p { margin: 0; color: #eff6ff; font-size: 14px; }
 .oshi-chat__close {
   display: flex;
