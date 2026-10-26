@@ -42,6 +42,19 @@
   const ERROR_MESSAGE = 'No fue posible consultar OSHI en este momento. Intenta nuevamente.';
   const WAIT_MESSAGE = 'Claro, dame un momento mientras reviso la documentación de OSH.';
   const WAIT_LONG_MESSAGE = 'Sigo con tu consulta. Gracias por esperar.';
+  const START_TOPICS = Object.freeze({
+    faq: {
+      placeholder: '¿Qué te gustaría saber? También puedes escribir otra pregunta.',
+    },
+    documents: {
+      placeholder: '¿Qué procedimiento o documento necesitas consultar?',
+      questions: [
+        '¿Cómo hago un arqueo de caja?',
+        'Necesito activar un código de Simphony',
+        '¿Cuál es el procedimiento para configurar una tablet de habitación?',
+      ],
+    },
+  });
 
   root.innerHTML = `
     <button class="oshi-chat__nudge" type="button" hidden>
@@ -68,7 +81,42 @@
         <p id="oshi-access-status" role="status">Solicita el código al responsable de la prueba.</p>
       </form>
       <div class="oshi-chat__messages" role="log" aria-live="polite"
-        aria-relevant="additions text" aria-label="Mensajes con OSHI"></div>
+        aria-relevant="additions text" aria-label="Mensajes con OSHI">
+        <section class="oshi-chat__welcome" id="oshi-start-menu" aria-labelledby="oshi-start-title" hidden>
+          <h3 id="oshi-start-title">¿Sobre qué te gustaría consultar?</h3>
+          <p>Elige una opción para empezar o escribe tu pregunta directamente.</p>
+          <div class="oshi-chat__topics">
+            <button class="oshi-chat__topic" type="button" data-topic="faq"
+              aria-pressed="false" aria-controls="oshi-start-examples">
+              <span class="oshi-chat__topic-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M8.5 9a3.5 3.5 0 0 1 7 .5c0 2-3.5 2-3.5 4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+              </span>
+              <span><strong>Preguntas frecuentes</strong><small>Vacaciones, beneficios, permisos y más</small></span>
+              <span class="oshi-chat__topic-arrow" aria-hidden="true">›</span>
+            </button>
+            <button class="oshi-chat__topic" type="button" data-topic="documents"
+              aria-pressed="false" aria-controls="oshi-start-examples">
+              <span class="oshi-chat__topic-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9ZM14 3v6h6M8 13h8M8 17h5"/></svg>
+              </span>
+              <span><strong>Procedimientos y documentos</strong><small>Pasos, instructivos y formatos de OSH</small></span>
+              <span class="oshi-chat__topic-arrow" aria-hidden="true">›</span>
+            </button>
+          </div>
+          <div class="oshi-chat__examples" id="oshi-start-examples" hidden>
+            <nav class="oshi-chat__menu-path" aria-label="Recorrido de preguntas frecuentes" hidden></nav>
+            <p class="oshi-chat__examples-title">Puedes empezar con una de estas preguntas:</p>
+            <button class="oshi-chat__menu-back" type="button" hidden>← Volver</button>
+            <div class="oshi-chat__questions"></div>
+            <p class="oshi-chat__examples-note">Toca un ejemplo para escribirlo abajo. Puedes editarlo antes de enviar.</p>
+          </div>
+        </section>
+      </div>
+      <div class="oshi-chat__browse" hidden>
+        <button class="oshi-chat__browse-button" type="button" aria-controls="oshi-start-menu">
+          <span aria-hidden="true">↖</span> Ver temas y preguntas
+        </button>
+      </div>
       <form class="oshi-chat__composer">
         <label class="oshi-chat__sr-only" for="oshi-chat-input">Mensaje para OSHI</label>
         <textarea id="oshi-chat-input" name="message" rows="2"
@@ -98,9 +146,188 @@
   const accessInput = root.querySelector('#oshi-access-code');
   const accessButton = accessForm.querySelector('button');
   const accessStatus = root.querySelector('#oshi-access-status');
+  const welcome = root.querySelector('.oshi-chat__welcome');
+  const browse = root.querySelector('.oshi-chat__browse');
+  const browseButton = root.querySelector('.oshi-chat__browse-button');
+  const topicButtons = [...root.querySelectorAll('.oshi-chat__topic')];
+  const examples = root.querySelector('.oshi-chat__examples');
+  const questions = root.querySelector('.oshi-chat__questions');
+  const menuPath = root.querySelector('.oshi-chat__menu-path');
+  const menuTitle = root.querySelector('.oshi-chat__examples-title');
+  const menuBack = root.querySelector('.oshi-chat__menu-back');
+  const menuNote = root.querySelector('.oshi-chat__examples-note');
   let accessCode = '';
   let isSending = false;
   let nudgeDismissed = false;
+  let conversationStarted = false;
+  let faqMenu = null;
+  let menuLoading = null;
+  let selectedTopic = null;
+  let axisIndex = -1;
+  let programIndex = -1;
+  let navigationEpoch = 0;
+
+  function menuButton(label, action, className = 'oshi-chat__menu-choice') {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = className;
+    button.textContent = label;
+    button.disabled = isSending;
+    button.addEventListener('click', () => {
+      if (!input.disabled) action();
+    });
+    return button;
+  }
+
+  function showStart() {
+    selectedTopic = null;
+    navigationEpoch++;
+    examples.hidden = true;
+    examples.setAttribute('aria-busy', 'false');
+    topicButtons.forEach(button => button.setAttribute('aria-pressed', 'false'));
+    input.placeholder = 'Escribe tu mensaje...';
+    messages.scrollTop = 0;
+  }
+
+  function showQuestions(items) {
+    for (const question of items) {
+      const button = menuButton(question, () => {
+        input.value = question;
+        input.focus({ preventScroll: true });
+      }, 'oshi-chat__question');
+      button.setAttribute('aria-label', `Usar pregunta: ${question}`);
+      questions.appendChild(button);
+    }
+    menuNote.textContent = 'Elige una pregunta para escribirla abajo. Puedes editarla antes de enviar.';
+  }
+
+  function renderFaqMenu() {
+    questions.replaceChildren();
+    menuPath.replaceChildren();
+    menuPath.hidden = false;
+    menuBack.hidden = false;
+    menuPath.appendChild(menuButton('Temas', showStart, 'oshi-chat__menu-crumb'));
+    menuPath.appendChild(menuButton('Preguntas frecuentes', () => {
+      axisIndex = -1;
+      programIndex = -1;
+      renderFaqMenu();
+    }, 'oshi-chat__menu-crumb'));
+    const axis = faqMenu.axes[axisIndex];
+    const program = axis?.programs[programIndex];
+    if (axis) {
+      menuPath.appendChild(menuButton(axis.label, () => {
+        programIndex = axis.programs.length === 1 ? 0 : -1;
+        renderFaqMenu();
+      }, 'oshi-chat__menu-crumb'));
+    }
+    if (program && program.label !== axis.label) {
+      const label = document.createElement('span');
+      label.textContent = program.label;
+      label.setAttribute('aria-current', 'step');
+      menuPath.appendChild(label);
+    }
+    if (program) {
+      menuTitle.textContent = `¿Qué deseas saber sobre ${program.label}?`;
+      showQuestions(program.questions);
+    } else if (axis) {
+      menuTitle.textContent = '¿Qué tema deseas consultar?';
+      axis.programs.forEach((program, index) => questions.appendChild(menuButton(program.label, () => {
+        programIndex = index;
+        renderFaqMenu();
+      })));
+      menuNote.textContent = 'Elige un programa o escribe tu pregunta directamente.';
+    } else {
+      menuTitle.textContent = '¿Sobre qué deseas preguntar?';
+      faqMenu.axes.forEach((axis, index) => questions.appendChild(menuButton(axis.label, () => {
+        axisIndex = index;
+        programIndex = axis.programs.length === 1 ? 0 : -1;
+        renderFaqMenu();
+      })));
+      menuNote.textContent = 'Elige un tema o escribe tu pregunta directamente.';
+    }
+    examples.scrollIntoView({ block: 'start' });
+  }
+
+  async function loadFaqMenu() {
+    if (faqMenu) return faqMenu;
+    if (!menuLoading) {
+      menuLoading = (async () => {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 15000);
+        try {
+          const response = await fetch(new URL('./faq/menu', CHAT_URL).href, {
+            headers: requiresAccessCode ? {'X-OSHI-Access-Code': accessCode} : {},
+            credentials: 'omit', cache: 'no-store', signal: controller.signal,
+          });
+          if (!response.ok) throw new Error('Menu unavailable');
+          const data = await response.json();
+          if (!Array.isArray(data.axes) || !data.axes.length || !data.axes.every(axis =>
+            typeof axis.label === 'string' && Array.isArray(axis.programs) && axis.programs.length &&
+            axis.programs.every(program => typeof program.label === 'string' &&
+              Array.isArray(program.questions) && program.questions.length &&
+              program.questions.every(question => typeof question === 'string' && question.trim())))) {
+            throw new Error('Invalid menu');
+          }
+          faqMenu = data;
+          return data;
+        } finally {
+          window.clearTimeout(timeout);
+          menuLoading = null;
+        }
+      })();
+    }
+    return menuLoading;
+  }
+
+  async function chooseTopic(topic) {
+    const config = START_TOPICS[topic];
+    if (!config || input.disabled) return;
+    selectedTopic = topic;
+    const epoch = ++navigationEpoch;
+    topicButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.topic === topic)));
+    questions.replaceChildren();
+    menuPath.hidden = true;
+    menuBack.hidden = true;
+    examples.hidden = false;
+    input.placeholder = config.placeholder;
+    if (topic === 'documents') {
+      examples.setAttribute('aria-busy', 'false');
+      menuTitle.textContent = 'Puedes empezar con una de estas preguntas:';
+      showQuestions(config.questions);
+    } else {
+      menuTitle.textContent = 'Cargando temas…';
+      menuNote.textContent = 'También puedes escribir tu pregunta directamente.';
+      examples.setAttribute('aria-busy', 'true');
+      try {
+        await loadFaqMenu();
+        if (epoch !== navigationEpoch || selectedTopic !== 'faq') return;
+        renderFaqMenu();
+      } catch {
+        if (epoch !== navigationEpoch || selectedTopic !== 'faq') return;
+        menuTitle.textContent = 'No se pudo cargar el menú. Puedes escribir tu pregunta.';
+        questions.appendChild(menuButton('Volver a cargar temas', () => chooseTopic('faq')));
+      } finally {
+        if (epoch === navigationEpoch) examples.setAttribute('aria-busy', 'false');
+      }
+    }
+    if (epoch === navigationEpoch) examples.scrollIntoView({ block: 'start' });
+  }
+
+  topicButtons.forEach(button => button.addEventListener('click', () => chooseTopic(button.dataset.topic)));
+  menuBack.addEventListener('click', () => {
+    if (input.disabled) return;
+    if (programIndex >= 0 && faqMenu.axes[axisIndex].programs.length > 1) programIndex = -1;
+    else if (axisIndex >= 0) { axisIndex = -1; programIndex = -1; }
+    else { showStart(); return; }
+    renderFaqMenu();
+  });
+  browseButton.addEventListener('click', () => {
+    if (browseButton.disabled) return;
+    messages.scrollTop = 0;
+    const selected = topicButtons.find(button => button.getAttribute('aria-pressed') === 'true');
+    (selected || topicButtons[0]).focus({ preventScroll: true });
+    // Volver a las opciones conserva los mensajes y el borrador.
+  });
 
   function scrollToLatest() {
     messages.scrollTop = messages.scrollHeight;
@@ -171,7 +398,7 @@
     launcher.setAttribute('aria-label', open ? 'Cerrar chat de OSHI' : 'Abrir chat de OSHI');
     dismissNudge();
     if (open) {
-      scrollToLatest();
+      if (conversationStarted) scrollToLatest();
       if (requiresAccessCode && !accessCode && CHAT_URL) accessInput.focus({ preventScroll: true });
       else if (!isSending) input.focus({ preventScroll: true });
     } else {
@@ -184,6 +411,12 @@
     const locked = requiresAccessCode && !accessCode;
     input.disabled = busy || !CHAT_URL || locked;
     sendButton.disabled = busy || !CHAT_URL || locked;
+    topicButtons.forEach(button => { button.disabled = busy || !CHAT_URL || locked; });
+    root.querySelectorAll('.oshi-chat__menu-choice, .oshi-chat__question, .oshi-chat__menu-crumb, .oshi-chat__menu-back')
+      .forEach(button => { button.disabled = busy || !CHAT_URL || locked; });
+    welcome.hidden = !CHAT_URL || locked;
+    browse.hidden = !conversationStarted || !CHAT_URL || locked;
+    browseButton.disabled = busy || !CHAT_URL || locked;
     messages.setAttribute('aria-busy', String(busy));
   }
 
@@ -249,6 +482,7 @@
     const startedAt = performance.now();
     let completed = false;
     let responseId = null;
+    conversationStarted = true;
     addMessage('user', message);
     input.value = '';
     setBusy(true);
@@ -327,8 +561,6 @@
   });
 
   if (CHAT_URL) {
-    addMessage('assistant', '¡Hola! Puedo ayudarte a consultar procedimientos y documentación oficial de OSH.');
-    addMessage('assistant', 'Pregúntame lo que necesites.');
     if (requiresAccessCode) input.placeholder = 'Introduce el código para empezar';
   } else {
     addMessage('assistant', 'OSHI no está disponible en este momento.');

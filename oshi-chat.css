@@ -139,6 +139,50 @@
 .oshi-chat__elapsed, .oshi-chat__timing { display: block; margin-top: 8px; color: #64748b; font-size: 12px; font-style: normal; white-space: normal; }
 .oshi-chat__message--error { border-color: #fecaca; color: #991b1b; background: #fff7f7; }
 
+.oshi-chat__welcome {
+  flex-shrink: 0;
+  width: 100%;
+  padding: 18px;
+  border: 1px solid #dbeafe;
+  border-radius: 14px;
+  background: #fff;
+}
+.oshi-chat__welcome h3 { margin: 0 0 8px; color: #0f172a; font-size: 19px; font-weight: 700; line-height: 1.35; }
+.oshi-chat__welcome > p { margin: 0 0 16px; color: #64748b; font-size: 13px; }
+.oshi-chat__topics { display: grid; gap: 10px; }
+.oshi-chat__topic {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px 11px;
+  border: 1px solid #dbeafe;
+  border-radius: 11px;
+  color: #1e293b;
+  background: #f8fafc;
+  text-align: left;
+  transition: border-color .15s, background-color .15s;
+}
+.oshi-chat__topic:hover:not(:disabled), .oshi-chat__topic[aria-pressed="true"] { border-color: #2563eb; background: #eff6ff; }
+.oshi-chat__topic > span:nth-child(2) { flex: 1; min-width: 0; }
+.oshi-chat__topic strong { display: block; font-size: 13px; font-weight: 700; line-height: 1.4; }
+.oshi-chat__topic small { display: block; margin-top: 4px; color: #64748b; font-size: 11px; line-height: 1.45; }
+.oshi-chat__topic-icon { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 9px; color: #2563eb; background: #dbeafe; }
+.oshi-chat__topic-icon svg { width: 21px; height: 21px; }
+.oshi-chat__topic-arrow { flex-shrink: 0; color: #2563eb; font-size: 23px; line-height: 1; }
+.oshi-chat__examples { margin-top: 18px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+.oshi-chat__examples-title { margin: 0 0 10px; color: #334155; font-size: 12px; font-weight: 600; }
+.oshi-chat__questions { display: grid; gap: 7px; }
+.oshi-chat .oshi-chat__question { width: 100%; padding: 10px 12px; border: 1px solid #bfdbfe; border-radius: 9px; color: #1e40af; background: #fff; text-align: left; font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+.oshi-chat__question:hover:not(:disabled) { background: #eff6ff; border-color: #2563eb; }
+.oshi-chat__examples-note { margin: 10px 0 0; color: #64748b; font-size: 11px; line-height: 1.5; }
+.oshi-chat .oshi-chat__menu-choice { width: 100%; padding: 11px 12px; border: 1px solid #bfdbfe; border-radius: 9px; color: #1e40af; background: #f8fafc; text-align: left; font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
+.oshi-chat__menu-choice:hover:not(:disabled) { border-color: #2563eb; background: #eff6ff; }
+.oshi-chat__menu-path { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-bottom: 12px; color: #475569; font-size: 11px; }
+.oshi-chat .oshi-chat__menu-crumb, .oshi-chat .oshi-chat__menu-back { padding: 5px 7px; border: 1px solid #dbeafe; border-radius: 6px; color: #1e40af; background: #fff; font-size: 11px; line-height: 1.5; text-align: left; }
+.oshi-chat__menu-crumb:hover:not(:disabled), .oshi-chat__menu-back:hover:not(:disabled) { background: #eff6ff; }
+.oshi-chat__menu-back { margin-bottom: 10px; }
+
 .oshi-chat__sources { display: grid; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #dbeafe; white-space: normal; }
 .oshi-chat__source { display: block; padding: 10px 12px; border: 1px solid #bfdbfe; border-radius: 10px; color: #1e40af; background: #eff6ff; text-decoration: none; overflow-wrap: anywhere; }
 .oshi-chat__source:hover { background: #dbeafe; }
@@ -146,6 +190,10 @@
 .oshi-chat__source-title { display: block; font-size: 12px; line-height: 1.4; color: #334155; }
 .oshi-chat__source-action { display: block; margin-top: 5px; font-weight: 700; }
 .oshi-chat__source-note { margin: 12px 0 0; color: #64748b; font-size: 12px; white-space: normal; }
+
+.oshi-chat__browse { flex-shrink: 0; padding: 7px 14px; border-top: 1px solid #e2e8f0; background: #f8fafc; }
+.oshi-chat .oshi-chat__browse-button { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; padding: 7px 10px; border: 1px solid #bfdbfe; border-radius: 8px; color: #1e40af; background: #fff; font-size: 12px; font-weight: 600; line-height: 1.4; }
+.oshi-chat__browse-button:hover:not(:disabled) { border-color: #2563eb; background: #eff6ff; }
 
 .oshi-chat__composer {
   display: flex;
@@ -195,8 +243,11 @@
   .oshi-chat__panel { bottom: 70px; height: min(600px, calc(100vh - 106px)); max-height: calc(100dvh - 106px); }
   .oshi-chat__nudge { right: 68px; bottom: 2px; max-width: calc(100vw - 104px); }
   .oshi-chat__header { padding: 16px; }
+  .oshi-chat__welcome { padding: 14px; }
+  .oshi-chat__welcome h3 { font-size: 18px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .oshi-chat__launcher { transition: none; }
+  .oshi-chat__topic { transition: none; }
 }
