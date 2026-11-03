@@ -1,9 +1,8 @@
-// Configuración pública del Portal: escribir aquí la URL HTTPS completa de /chat.
-// Ejemplo de formato: https://backend.example.com/chat (no es una URL operativa).
-// No colocar claves, tokens, contraseñas ni credenciales en este archivo.
-// Túnel temporal de pruebas: requiere el código privado proporcionado por el anfitrión.
+// Configuración pública de OSHI. No contiene credenciales.
+// Backend estable en AWS EC2; acceso anónimo mediante HTTPS.
 window.OSHI_CONFIG = Object.freeze({
-  chatUrl: 'https://dean-powder-justice-looksmart.trycloudflare.com/chat',
-  requiresAccessCode: true,
-  useLocalBackendOnHttp: true,
+  chatUrl: 'https://77.112.134.241/chat',
+  requiresAccessCode: false,
+  useLocalBackendOnHttp: false,
+  faqOnly: true,
 });

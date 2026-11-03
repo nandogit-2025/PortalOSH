@@ -38,9 +38,12 @@
 
   const CHAT_URL = resolveChatUrl();
   const requiresAccessCode = window.OSHI_CONFIG?.requiresAccessCode === true && !useLocalBackend;
-  const REQUEST_TIMEOUT_MS = 180000;
+  const faqOnly = window.OSHI_CONFIG?.faqOnly === true;
+  const REQUEST_TIMEOUT_MS = faqOnly ? 30000 : 180000;
   const ERROR_MESSAGE = 'No fue posible consultar OSHI en este momento. Intenta nuevamente.';
-  const WAIT_MESSAGE = 'Claro, dame un momento mientras reviso la documentación de OSH.';
+  const WAIT_MESSAGE = faqOnly
+    ? 'Un momento, estoy consultando las preguntas frecuentes de OSH.'
+    : 'Claro, dame un momento mientras reviso la documentación de OSH.';
   const WAIT_LONG_MESSAGE = 'Sigo con tu consulta. Gracias por esperar.';
   const START_TOPICS = Object.freeze({
     faq: {
@@ -150,6 +153,12 @@
   const browse = root.querySelector('.oshi-chat__browse');
   const browseButton = root.querySelector('.oshi-chat__browse-button');
   const topicButtons = [...root.querySelectorAll('.oshi-chat__topic')];
+  if (faqOnly) {
+    root.querySelector('[data-topic="documents"]').hidden = true;
+    root.querySelector('.oshi-chat__header p').textContent =
+      'Soy OSHI, tu asistente de OSH. Consulta aquí las preguntas frecuentes.';
+    input.maxLength = 1200;
+  }
   const examples = root.querySelector('.oshi-chat__examples');
   const questions = root.querySelector('.oshi-chat__questions');
   const menuPath = root.querySelector('.oshi-chat__menu-path');
@@ -281,7 +290,7 @@
 
   async function chooseTopic(topic) {
     const config = START_TOPICS[topic];
-    if (!config || input.disabled) return;
+    if (!config || input.disabled || (faqOnly && topic === 'documents')) return;
     selectedTopic = topic;
     const epoch = ++navigationEpoch;
     topicButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.topic === topic)));
@@ -521,6 +530,11 @@
         accessCode = '';
         accessForm.hidden = false;
         accessStatus.textContent = 'El código ya no es válido. Introduce el código vigente.';
+      }
+      if (response.status === 429) {
+        pending.textContent = 'Has enviado varias preguntas seguidas. Espera un momento e inténtalo de nuevo.';
+        pending.classList.add('oshi-chat__message--error');
+        return;
       }
       if (!response.ok) throw new Error(`OSHI devolvió HTTP ${response.status}`);
       const data = await response.json();
