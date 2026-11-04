@@ -66,9 +66,11 @@
     <section class="oshi-chat__panel" id="oshi-chat-panel"
       role="dialog" aria-labelledby="oshi-chat-title" hidden>
       <header class="oshi-chat__header">
+        <img class="oshi-chat__avatar oshi-chat__avatar--header" src="./assets/oshi-mascot-v1.png"
+          alt="" width="48" height="48" decoding="async">
         <div>
-          <h2 id="oshi-chat-title">¡Hola! 👋</h2>
-          <p>Soy OSHI, tu asistente IA de OSH. Estoy aquí para ayudarte.</p>
+          <h2 id="oshi-chat-title">OSHI</h2>
+          <p>Tu asistente de OSH</p>
         </div>
         <button class="oshi-chat__close" type="button" aria-label="Cerrar chat de OSHI">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
@@ -131,7 +133,9 @@
     </section>
     <button class="oshi-chat__launcher" type="button" aria-label="Abrir chat de OSHI"
       aria-controls="oshi-chat-panel" aria-expanded="false">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
+      <img class="oshi-chat__avatar oshi-chat__avatar--launcher" src="./assets/oshi-mascot-v1.png"
+        alt="" width="56" height="56" decoding="async">
+      <svg class="oshi-chat__launcher-fallback" hidden viewBox="0 0 24 24" aria-hidden="true">
         <path d="M21 11.5a8.5 8.5 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.5 8.5 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/>
         <path d="M8 12h.01M12 12h.01M16 12h.01"/>
       </svg>
@@ -139,6 +143,14 @@
 
   const panel = root.querySelector('.oshi-chat__panel');
   const launcher = root.querySelector('.oshi-chat__launcher');
+  root.querySelectorAll('.oshi-chat__avatar').forEach(avatar => {
+    avatar.addEventListener('error', () => {
+      avatar.hidden = true;
+      if (avatar.classList.contains('oshi-chat__avatar--launcher')) {
+        launcher.querySelector('.oshi-chat__launcher-fallback').removeAttribute('hidden');
+      }
+    });
+  });
   const nudge = root.querySelector('.oshi-chat__nudge');
   const closeButton = root.querySelector('.oshi-chat__close');
   const messages = root.querySelector('.oshi-chat__messages');
@@ -352,6 +364,65 @@
     return bubble;
   }
 
+  function appendAnswerText(parent, text) {
+    // Solo creamos nodos de texto y negritas; nunca interpretamos HTML del modelo.
+    const emphasis = /\*\*([^*\n]+)\*\*/g;
+    let position = 0;
+    for (const match of text.matchAll(emphasis)) {
+      parent.appendChild(document.createTextNode(text.slice(position, match.index)));
+      const strong = document.createElement('strong');
+      strong.textContent = match[1];
+      parent.appendChild(strong);
+      position = match.index + match[0].length;
+    }
+    parent.appendChild(document.createTextNode(text.slice(position)));
+  }
+
+  function renderAnswer(bubble, answer) {
+    const content = document.createElement('div');
+    content.className = 'oshi-chat__answer';
+    let paragraph = [];
+    let list = null;
+    const flushParagraph = () => {
+      if (!paragraph.length) return;
+      const element = document.createElement('p');
+      appendAnswerText(element, paragraph.join('\n'));
+      content.appendChild(element);
+      paragraph = [];
+    };
+    for (const raw of answer.replace(/\r\n?/g, '\n').split('\n')) {
+      const line = raw.trim();
+      if (!line) {
+        flushParagraph();
+        list = null;
+        continue;
+      }
+      const item = line.match(/^(?:(\d{1,2})[.)]|[-*•])\s+(.+)$/);
+      if (item) {
+        flushParagraph();
+        const tag = item[1] ? 'OL' : 'UL';
+        if (!list || list.tagName !== tag) {
+          list = document.createElement(tag.toLowerCase());
+          content.appendChild(list);
+        }
+        const element = document.createElement('li');
+        if (item[1]) element.value = Number(item[1]);
+        appendAnswerText(element, item[2]);
+        list.appendChild(element);
+      } else {
+        list = null;
+        paragraph.push(line);
+      }
+    }
+    flushParagraph();
+    bubble.replaceChildren(content);
+  }
+
+  function scrollToReply(bubble) {
+    const top = bubble.getBoundingClientRect().top - messages.getBoundingClientRect().top;
+    messages.scrollTop += top - 12;
+  }
+
   function sourceUrlAllowed(url) {
     if (url.protocol !== 'https:' || url.hostname !== 'oshgetsemani.sharepoint.com'
       || url.port || url.username || url.password || url.hash) return false;
@@ -398,14 +469,29 @@
       link.setAttribute('aria-label', `Abrir documento: ${source.title}`);
       const title = document.createElement('span');
       title.className = 'oshi-chat__source-title';
-      title.textContent = source.title;
+      const code = typeof source.code === 'string' ? source.code.trim() : '';
+      let label = source.title.replace(/\.(pdf|docx?|xlsx?|pptx?)$/i, '');
+      if (code && label.toUpperCase().startsWith(code.toUpperCase() + ' ')) label = label.slice(code.length).trim();
+      title.textContent = label;
+      if (code) {
+        const badge = document.createElement('span');
+        badge.className = 'oshi-chat__source-code';
+        badge.textContent = code;
+        link.appendChild(badge);
+      }
       const action = document.createElement('span');
       action.className = 'oshi-chat__source-action';
-      action.textContent = 'Abrir documento ↗';
+      action.textContent = 'Ver documento ↗';
       link.append(title, action);
       list.appendChild(link);
     }
-    if (list.children.length) bubble.appendChild(list);
+    if (list.children.length) {
+      const label = document.createElement('p');
+      label.className = 'oshi-chat__sources-label';
+      label.textContent = list.children.length === 1 ? 'Documento de referencia' : 'Documentos de referencia';
+      list.prepend(label);
+      bubble.appendChild(list);
+    }
     if (data.sources_unavailable === true) {
       const note = document.createElement('p');
       note.className = 'oshi-chat__source-note';
@@ -561,7 +647,7 @@
       if (typeof data.answer !== 'string' || !data.answer.trim()) {
         throw new Error('OSHI no devolvió una respuesta de texto válida');
       }
-      pending.textContent = data.answer;
+      renderAnswer(pending, data.answer);
       appendSources(pending, data);
       completed = true;
       if (typeof data.response_id === 'string') responseId = data.response_id;
@@ -586,7 +672,7 @@
         duration_ms: durationMs, completed, response_id: responseId,
       });
       setBusy(false);
-      scrollToLatest();
+      scrollToReply(pending);
       // No quitar el foco del buscador u otro control del Portal.
       if (!panel.hidden && (root.contains(document.activeElement) || document.activeElement === document.body)) {
         input.focus({ preventScroll: true });
