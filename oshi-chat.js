@@ -53,8 +53,8 @@
       placeholder: '¿Qué procedimiento o documento necesitas consultar?',
       questions: [
         '¿Cómo hago un arqueo de caja?',
-        'Necesito activar un código de Simphony',
-        '¿Cuál es el procedimiento para configurar una tablet de habitación?',
+        '¿Cuál es el procedimiento para realizar una compra?',
+        '¿Cómo solicito un diseño?',
       ],
     },
   });
@@ -144,6 +144,7 @@
   const messages = root.querySelector('.oshi-chat__messages');
   const form = root.querySelector('.oshi-chat__composer');
   const input = root.querySelector('#oshi-chat-input');
+  input.maxLength = 1200;
   const sendButton = root.querySelector('.oshi-chat__send');
   const accessForm = root.querySelector('.oshi-chat__access');
   const accessInput = root.querySelector('#oshi-access-code');
@@ -157,7 +158,6 @@
     root.querySelector('[data-topic="documents"]').hidden = true;
     root.querySelector('.oshi-chat__header p').textContent =
       'Soy OSHI, tu asistente de OSH. Consulta aquí las preguntas frecuentes.';
-    input.maxLength = 1200;
   }
   const examples = root.querySelector('.oshi-chat__examples');
   const questions = root.querySelector('.oshi-chat__questions');
@@ -352,6 +352,26 @@
     return bubble;
   }
 
+  function sourceUrlAllowed(url) {
+    if (url.protocol !== 'https:' || url.hostname !== 'oshgetsemani.sharepoint.com'
+      || url.port || url.username || url.password || url.hash) return false;
+    let decoded;
+    try { decoded = decodeURIComponent(url.href); } catch { return false; }
+    if (/[\u0000-\u001f\u007f\\]/.test(decoded)) return false;
+    const pairs = [...url.searchParams];
+    if (/\.(pdf|docx?|xlsx?|pptx?|csv)$/i.test(url.pathname)) {
+      return pairs.length <= 1 && pairs.every(([key, value]) => key === 'web' && ['0', '1'].includes(value));
+    }
+    if (!url.pathname.endsWith('/_layouts/15/Doc.aspx')) return false;
+    const allowed = new Set(['sourcedoc', 'file', 'action', 'mobileredirect']);
+    if (new Set(pairs.map(([key]) => key)).size !== pairs.length
+      || pairs.some(([key]) => !allowed.has(key))) return false;
+    return /^\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}$/i.test(url.searchParams.get('sourcedoc') || '')
+      && /\.(docx|xlsx|pptx)$/i.test(url.searchParams.get('file') || '')
+      && ['default', 'view'].includes(url.searchParams.get('action') || 'default')
+      && ['true', 'false'].includes(url.searchParams.get('mobileredirect') || 'true');
+  }
+
   function appendSources(bubble, data) {
     const list = document.createElement('div');
     list.className = 'oshi-chat__sources';
@@ -362,14 +382,12 @@
       let url;
       try {
         url = new URL(source.url);
-        if (url.protocol !== 'https:' || url.hostname !== 'oshgetsemani.sharepoint.com'
-          || url.port || url.username || url.password || url.hash
-          || !/\.(pdf|docx?|xlsx?|pptx?|csv)$/i.test(url.pathname)
-          || [...url.searchParams].some(([key, value]) => key !== 'web' || !['0', '1'].includes(value))) continue;
+        if (!sourceUrlAllowed(url)) continue;
       } catch {
         continue;
       }
-      const key = url.origin + url.pathname;
+      const key = url.origin + url.pathname + (url.searchParams.has('sourcedoc')
+        ? '?' + url.searchParams.get('sourcedoc').toLowerCase() : '');
       if (seen.has(key)) continue;
       seen.add(key);
       const link = document.createElement('a');
@@ -532,7 +550,9 @@
         accessStatus.textContent = 'El código ya no es válido. Introduce el código vigente.';
       }
       if (response.status === 429) {
-        pending.textContent = 'Has enviado varias preguntas seguidas. Espera un momento e inténtalo de nuevo.';
+        const limited = await response.json().catch(() => null);
+        pending.textContent = typeof limited?.detail === 'string' ? limited.detail
+          : 'Por ahora alcanzamos el límite de consultas. Espera un momento e inténtalo de nuevo.';
         pending.classList.add('oshi-chat__message--error');
         return;
       }
