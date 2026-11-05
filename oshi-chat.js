@@ -438,7 +438,7 @@
     if (new Set(pairs.map(([key]) => key)).size !== pairs.length
       || pairs.some(([key]) => !allowed.has(key))) return false;
     return /^\{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\}$/i.test(url.searchParams.get('sourcedoc') || '')
-      && /\.(docx|xlsx|pptx)$/i.test(url.searchParams.get('file') || '')
+      && /\.(docx?|xlsx|pptx)$/i.test(url.searchParams.get('file') || '')
       && ['default', 'view'].includes(url.searchParams.get('action') || 'default')
       && ['true', 'false'].includes(url.searchParams.get('mobileredirect') || 'true');
   }
