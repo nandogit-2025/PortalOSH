@@ -365,17 +365,43 @@
   }
 
   function appendAnswerText(parent, text) {
-    // Solo creamos nodos de texto y negritas; nunca interpretamos HTML del modelo.
-    const emphasis = /\*\*([^*\n]+)\*\*/g;
+    const inline = /\[([^\]\n]+)\]\((https:\/\/(?:[^\s<>()]|\([^()\s]*\))+)\)|\*\*([^*\n]+)\*\*|(https:\/\/(?:[^\s<>"'()[\]*]|\([^()\s]*\))+)/gi;
     let position = 0;
-    for (const match of text.matchAll(emphasis)) {
+    for (const match of text.matchAll(inline)) {
       parent.appendChild(document.createTextNode(text.slice(position, match.index)));
-      const strong = document.createElement('strong');
-      strong.textContent = match[1];
-      parent.appendChild(strong);
+      if (match[3]) {
+        const strong = document.createElement('strong');
+        appendAnswerText(strong, match[3]);
+        parent.appendChild(strong);
+      } else {
+        const rawUrl = match[2] || match[4].replace(/[.,;:!?]+$/, '');
+        const url = answerUrl(rawUrl);
+        if (url) {
+          const link = document.createElement('a');
+          link.href = url.href;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.textContent = match[1] ? match[1].replace(/^\*\*|\*\*$/g, '') : rawUrl;
+          parent.append(link, document.createTextNode(match[4] ? match[4].slice(rawUrl.length) : ''));
+        } else {
+          parent.appendChild(document.createTextNode(match[0]));
+        }
+      }
       position = match.index + match[0].length;
     }
     parent.appendChild(document.createTextNode(text.slice(position)));
+  }
+
+  function answerUrl(rawUrl) {
+    try {
+      const url = new URL(rawUrl);
+      if (url.protocol !== 'https:' || url.username || url.password || url.port
+        || /[\u0000-\u001f\u007f\\]/.test(decodeURIComponent(rawUrl))) return null;
+      const approvedHosts = ['oshpitalitygroup.buk.co', 'oshgetsemani.sharepoint.com', 'easyconnectosh.lovable.app'];
+      return approvedHosts.includes(url.hostname) ? url : null;
+    } catch {
+      return null;
+    }
   }
 
   function renderAnswer(bubble, answer) {
