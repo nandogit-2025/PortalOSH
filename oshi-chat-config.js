@@ -5,4 +5,5 @@ window.OSHI_CONFIG = Object.freeze({
   requiresAccessCode: false,
   useLocalBackendOnHttp: false,
   faqOnly: false,
+  scope: 'documents',
 });

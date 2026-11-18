@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="description" content="Conversa con OSHI y consulta las preguntas frecuentes de Gestión Humana de OSH.">
+  <title>OSHI · Preguntas frecuentes</title>
+  <link rel="icon" href="./assets/oshi-avatar-nina-v1.png" type="image/png">
+  <link rel="stylesheet" href="./oshi-chat.css?v=20261110-links">
+  <link rel="stylesheet" href="./oshi-chat-page.css?v=20261118-buk">
+  <script src="./oshi-chat-config.js?v=20261118-buk"></script>
+  <script>
+    window.OSHI_CONFIG = Object.freeze({
+      ...window.OSHI_CONFIG,
+      scope: 'faq',
+      faqOnly: true,
+      fullscreen: true,
+    });
+  </script>
+  <script src="./oshi-chat.js?v=20261118-buk" defer></script>
+</head>
+<body>
+  <main id="oshi-chat-root">
+    <p class="oshi-chat-page-loading" role="status">Cargando OSHI…</p>
+  </main>
+  <noscript><p>Activa JavaScript en tu navegador para conversar con OSHI.</p></noscript>
+</body>
+</html>

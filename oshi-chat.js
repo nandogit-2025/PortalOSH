@@ -38,7 +38,12 @@
 
   const CHAT_URL = resolveChatUrl();
   const requiresAccessCode = window.OSHI_CONFIG?.requiresAccessCode === true && !useLocalBackend;
-  const faqOnly = window.OSHI_CONFIG?.faqOnly === true;
+  const scope = ['faq', 'documents'].includes(window.OSHI_CONFIG?.scope)
+    ? window.OSHI_CONFIG.scope : window.OSHI_CONFIG?.faqOnly === true ? 'faq' : 'all';
+  const faqOnly = scope === 'faq';
+  const documentsOnly = scope === 'documents';
+  const fullscreen = window.OSHI_CONFIG?.fullscreen === true;
+  if (fullscreen) root.classList.add('oshi-chat--fullscreen');
   const REQUEST_TIMEOUT_MS = faqOnly ? 30000 : 180000;
   const ERROR_MESSAGE = 'No fue posible consultar OSHI en este momento. Intenta nuevamente.';
   const WAIT_MESSAGE = faqOnly
@@ -64,12 +69,12 @@
       ¿Necesitas ayuda? ¡Chatea conmigo! 💬
     </button>
     <section class="oshi-chat__panel" id="oshi-chat-panel"
-      role="dialog" aria-labelledby="oshi-chat-title" hidden>
+      role="${fullscreen ? 'region' : 'dialog'}" aria-labelledby="oshi-chat-title" hidden>
       <header class="oshi-chat__header">
         <img class="oshi-chat__avatar oshi-chat__avatar--header" src="./assets/oshi-avatar-nina-v1.png"
           alt="" width="48" height="48" decoding="async">
         <div>
-          <h2 id="oshi-chat-title">OSHI</h2>
+          <${fullscreen ? 'h1' : 'h2'} id="oshi-chat-title">OSHI</${fullscreen ? 'h1' : 'h2'}>
           <p>Tu asistente de OSH</p>
         </div>
         <button class="oshi-chat__close" type="button" aria-label="Cerrar chat de OSHI">
@@ -169,7 +174,19 @@
   if (faqOnly) {
     root.querySelector('[data-topic="documents"]').hidden = true;
     root.querySelector('.oshi-chat__header p').textContent =
-      'Soy OSHI, tu asistente de OSH. Consulta aquí las preguntas frecuentes.';
+      'Tu asistente de Gestión Humana';
+    root.querySelector('#oshi-start-title').textContent = '¿Qué te gustaría saber?';
+    welcome.querySelector(':scope > p').textContent = 'Consulta sobre vacaciones, beneficios, permisos y más. Elige un tema o escribe tu pregunta.';
+  } else if (documentsOnly) {
+    root.querySelector('[data-topic="faq"]').hidden = true;
+    root.querySelector('.oshi-chat__header p').textContent = 'Procedimientos y documentos de OSH';
+    root.querySelector('#oshi-start-title').textContent = '¿Qué procedimiento necesitas consultar?';
+    welcome.querySelector(':scope > p').textContent = 'Encuentra pasos, instructivos y formatos. Escribe tu pregunta o elige un ejemplo.';
+  }
+  if (scope !== 'all') root.querySelector('.oshi-chat__topics').hidden = true;
+  if (fullscreen) {
+    launcher.hidden = true;
+    closeButton.hidden = true;
   }
   const examples = root.querySelector('.oshi-chat__examples');
   const questions = root.querySelector('.oshi-chat__questions');
@@ -208,6 +225,11 @@
     topicButtons.forEach(button => button.setAttribute('aria-pressed', 'false'));
     input.placeholder = 'Escribe tu mensaje...';
     messages.scrollTop = 0;
+    if (scope !== 'all') {
+      axisIndex = -1;
+      programIndex = -1;
+      chooseTopic(scope);
+    }
   }
 
   function showQuestions(items) {
@@ -227,14 +249,18 @@
     menuPath.replaceChildren();
     menuPath.hidden = false;
     menuBack.hidden = false;
-    menuPath.appendChild(menuButton('Temas', showStart, 'oshi-chat__menu-crumb'));
-    menuPath.appendChild(menuButton('Preguntas frecuentes', () => {
+    if (!faqOnly) menuPath.appendChild(menuButton('Temas', showStart, 'oshi-chat__menu-crumb'));
+    menuPath.appendChild(menuButton(faqOnly ? 'Todos los temas' : 'Preguntas frecuentes', () => {
       axisIndex = -1;
       programIndex = -1;
       renderFaqMenu();
     }, 'oshi-chat__menu-crumb'));
     const axis = faqMenu.axes[axisIndex];
     const program = axis?.programs[programIndex];
+    if (faqOnly) {
+      menuPath.hidden = !axis;
+      menuBack.hidden = !axis;
+    }
     if (axis) {
       menuPath.appendChild(menuButton(axis.label, () => {
         programIndex = axis.programs.length === 1 ? 0 : -1;
@@ -302,7 +328,7 @@
 
   async function chooseTopic(topic) {
     const config = START_TOPICS[topic];
-    if (!config || input.disabled || (faqOnly && topic === 'documents')) return;
+    if (!config || input.disabled || (scope !== 'all' && topic !== scope)) return;
     selectedTopic = topic;
     const epoch = ++navigationEpoch;
     topicButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.topic === topic)));
@@ -345,8 +371,9 @@
   browseButton.addEventListener('click', () => {
     if (browseButton.disabled) return;
     messages.scrollTop = 0;
-    const selected = topicButtons.find(button => button.getAttribute('aria-pressed') === 'true');
-    (selected || topicButtons[0]).focus({ preventScroll: true });
+    const firstQuestion = questions.querySelector('button:not(:disabled)');
+    const selected = topicButtons.find(button => !button.hidden && button.getAttribute('aria-pressed') === 'true');
+    (firstQuestion || selected || input).focus({ preventScroll: true });
     // Volver a las opciones conserva los mensajes y el borrador.
   });
 
@@ -531,7 +558,7 @@
     nudge.hidden = true;
   }
 
-  function setOpen(open) {
+  function setOpen(open, focusInput = true) {
     panel.hidden = !open;
     launcher.setAttribute('aria-expanded', String(open));
     launcher.setAttribute('aria-label', open ? 'Cerrar chat de OSHI' : 'Abrir chat de OSHI');
@@ -539,7 +566,7 @@
     if (open) {
       if (conversationStarted) scrollToLatest();
       if (requiresAccessCode && !accessCode && CHAT_URL) accessInput.focus({ preventScroll: true });
-      else if (!isSending) input.focus({ preventScroll: true });
+      else if (!isSending && focusInput) input.focus({ preventScroll: true });
     } else {
       launcher.focus({ preventScroll: true });
     }
@@ -601,7 +628,7 @@
   nudge.addEventListener('click', () => setOpen(true));
   closeButton.addEventListener('click', () => setOpen(false));
   root.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !panel.hidden) {
+    if (event.key === 'Escape' && !panel.hidden && !fullscreen) {
       event.preventDefault();
       setOpen(false);
     }
@@ -653,7 +680,7 @@
           ...(requiresAccessCode ? {'X-OSHI-Access-Code': accessCode} : {}),
         },
         credentials: 'omit',
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({ message, ...(scope !== 'all' ? {scope} : {}) }),
         signal: controller.signal,
       });
       if (response.status === 401 && requiresAccessCode) {
@@ -713,6 +740,8 @@
     input.placeholder = 'Chat no disponible';
   }
   setBusy(false);
+  if (scope !== 'all' && CHAT_URL && !requiresAccessCode) chooseTopic(scope);
+  if (fullscreen) setOpen(true, false);
   window.setTimeout(() => {
     if (!nudgeDismissed && panel.hidden) {
       nudge.hidden = false;
